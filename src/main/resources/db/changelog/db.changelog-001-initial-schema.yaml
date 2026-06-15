@@ -1,0 +1,518 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-usuarios-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: usuarios
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: nome
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: senha
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: perfil
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  defaultValue: 0
+
+  - changeSet:
+      id: 001-create-fornecedores-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: fornecedores
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: nome
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cnpj
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+              - column:
+                  name: telefone
+                  type: VARCHAR(20)
+              - column:
+                  name: endereco
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  defaultValue: 0
+
+  - changeSet:
+      id: 001-create-produtos-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: produtos
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: tipo_produto
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sku
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: descricao
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: preco_venda
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: custo_aquisicao
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantidade
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estoque_minimo
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: imagem_url
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  defaultValue: 0
+
+  - changeSet:
+      id: 001-create-cpus-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: cpus
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: marca
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modelo
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nucleos
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: frequencia_ghz
+                  type: NUMERIC(4,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arquitetura
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: socket
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+            foreignKeyName: fk_cpus_produtos
+            referencedTableName: produtos
+            referencedColumnNames: id
+            baseTableSchemaName: public
+            baseColumnNames: id
+
+  - changeSet:
+      id: 001-create-placas_de_video-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: placas_de_video
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: marca
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modelo
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vram_gb
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tipo_memoria
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: chipset
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: largura_banda_bits
+                  type: INT
+                  constraints:
+                    nullable: false
+            foreignKeyName: fk_placas_de_video_produtos
+            referencedTableName: produtos
+            referencedColumnNames: id
+            baseTableSchemaName: public
+            baseColumnNames: id
+
+  - changeSet:
+      id: 001-create-memorias-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: memorias
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: marca
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: capacidade_gb
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tipo_memoria
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: frequencia_mhz
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: latencia_cl
+                  type: INT
+                  constraints:
+                    nullable: false
+            foreignKeyName: fk_memorias_produtos
+            referencedTableName: produtos
+            referencedColumnNames: id
+            baseTableSchemaName: public
+            baseColumnNames: id
+
+  - changeSet:
+      id: 001-create-dispositivos_armazenamento-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: dispositivos_armazenamento
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: marca
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modelo
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: capacidade_gb
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tipo_armazenamento
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interface_
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: velocidade_leitura_mbs
+                  type: INT
+                  constraints:
+                    nullable: false
+            foreignKeyName: fk_dispositivos_armazenamento_produtos
+            referencedTableName: produtos
+            referencedColumnNames: id
+            baseTableSchemaName: public
+            baseColumnNames: id
+
+  - changeSet:
+      id: 001-create-vendas-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: vendas
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: usuario_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_vendas_usuarios
+                    references: usuarios(id)
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: valor_total
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: motivo_cancelamento
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  defaultValue: 0
+
+  - changeSet:
+      id: 001-create-itens_venda-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: itens_venda
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: venda_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_itens_venda_vendas
+                    references: vendas(id)
+              - column:
+                  name: produto_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_itens_venda_produtos
+                    references: produtos(id)
+              - column:
+                  name: quantidade
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: preco_unitario
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 001-create-estoque-table
+      author: felipe
+      changes:
+        - createTable:
+            tableName: estoque
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: produto_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    unique: true
+                    foreignKeyName: fk_estoque_produtos
+                    references: produtos(id)
+              - column:
+                  name: quantidade
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estoque_minimo
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+              - column:
+                  name: ativo
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  defaultValue: 0
