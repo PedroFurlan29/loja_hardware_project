@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-audit-columns
+      author: felipe
+      changes:
+        - addColumn:
+            tableName: vendas
+            columns:
+              - column:
+                  name: usuario_auditoria_id
+                  type: BIGINT
+                  foreignKeyName: fk_vendas_usuario_auditoria
+                  references: usuarios(id)
+        - addColumn:
+            tableName: itens_venda
+            columns:
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
