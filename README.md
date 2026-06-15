@@ -12,15 +12,15 @@
 Sistema web completo para gerenciamento de estoque e vendas de uma loja especializada em hardware, implementado com **Spring Boot 3.x**, **PostgreSQL**, **JWT** e **Docker Compose**.
 
 ### Funcionalidades Principais
-- ✅ Autenticação JWT stateless
-- ✅ Gestão de produtos (CPU, GPU, Memória, Armazenamento)
-- ✅ Controle de estoque com nível mínimo crítico
-- ✅ Registro e cancelamento de vendas com auditoria
-- ✅ Ingestão automática de dados (DummyJSON)
-- ✅ API REST documentada via Swagger/OpenAPI
-- ✅ Testes automatizados (JUnit 5 + TestContainers)
-- ✅ CI/CD via GitHub Actions
-- ✅ Docker Compose para deploy rápido
+- Autenticação JWT stateless
+- Gestão de produtos (CPU, GPU, Memória, Armazenamento)
+- Controle de estoque com nível mínimo crítico
+- Registro e cancelamento de vendas com auditoria
+- Ingestão automática de dados (DummyJSON)
+- API REST documentada via Swagger/OpenAPI
+- Testes automatizados (JUnit 5 + TestContainers)
+- CI/CD via GitHub Actions
+- Docker Compose para deploy rápido
 
 ---
 
