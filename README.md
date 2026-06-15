@@ -56,8 +56,8 @@ Sistema web completo para gerenciamento de estoque e vendas de uma loja especial
 ### Opção 1: Com Docker Compose (Recomendado)
 
 ```bash
-git clone https://github.com/felipemchdev/hardware_store_uniproject.git
-cd hardware_store_uniproject
+git clone https://github.com/PedroFurlan29/loja_hardware_project.git
+cd loja_hardware_project
 
 docker-compose up -d
 
