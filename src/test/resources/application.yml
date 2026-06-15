@@ -5,6 +5,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/hardware_store_test
     username: test
     password: test
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -18,3 +19,6 @@ spring:
 jwt:
   secret: this-is-a-32-byte-minimum-secret-for-jjwt-hs256
   expiration: 86400000
+
+server:
+  port: 0
