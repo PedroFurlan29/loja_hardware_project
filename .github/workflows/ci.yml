@@ -36,10 +36,14 @@ jobs:
           cache: gradle
 
       - name: Run tests
-        run: ./gradlew test --info
+        run: |
+          chmod +x gradlew
+          ./gradlew test --info
 
       - name: Build project
-        run: ./gradlew build -x test
+        run: |
+          chmod +x gradlew
+          ./gradlew build -x test
 
       - name: Upload test results
         if: always()
