@@ -1,5 +1,7 @@
 spring:
   datasource:
+    hikari:
+      initialization-fail-timeout: 30000
     url: jdbc:postgresql://localhost:5432/hardware_store_test
     username: test
     password: test

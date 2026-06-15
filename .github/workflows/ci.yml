@@ -35,6 +35,14 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Wait for PostgreSQL
+        run: |
+          for i in $(seq 1 30); do
+            pg_isready -h localhost -p 5432 -U test -d hardware_store_test && break
+            echo Waiting for PostgreSQL...
+            sleep 2
+          done
+
       - name: Run tests
         run: |
           chmod +x gradlew
