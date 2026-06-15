@@ -1,12 +1,36 @@
-# IntelliJ
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# IDE
 .idea/
+.vscode/
 *.iml
-*.iws
-out/
+*.swp
+*.swo
+.settings/
+.classpath
+.project
+bin/
 
-# Compilados Java
-*.class
-
-# Sistema operacional
+# OS
 .DS_Store
 Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Build
+*.jar
+*.war
+
+# Test reports
+/test-reports/
