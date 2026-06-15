@@ -44,6 +44,8 @@ jobs:
           done
 
       - name: Run tests
+        env:
+          JWT_SECRET: this-secret-is-long-enough-for-256bit-hs256-key
         run: |
           chmod +x gradlew
           ./gradlew test --info

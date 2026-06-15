@@ -16,5 +16,5 @@ spring:
     enabled: false
 
 jwt:
-  secret: test-secret-key-for-ci
+  secret: this-is-a-32-byte-minimum-secret-for-jjwt-hs256
   expiration: 86400000
