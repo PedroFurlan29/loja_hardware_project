@@ -24,28 +24,28 @@ Sistema web completo para gerenciamento de estoque e vendas de uma loja especial
 
 ---
 
-## Stack Técnico
+## Tecnologias
 
 ### Backend
 - **Framework**: Spring Boot 3.3.x
 - **Build**: Gradle (Kotlin DSL)
-- **BD**: PostgreSQL 15
+- **Banco de Dados**: PostgreSQL 15
 - **ORM**: Spring Data JPA + Hibernate
-- **Migrations**: Liquibase
-- **Auth**: Spring Security 6.x + JWT (JJWT 0.12.3)
+- **Migrações**: Liquibase
+- **Autenticação**: Spring Security 6.x + JWT (JJWT 0.12.3)
 - **Validação**: Jakarta Bean Validation
-- **Documentação API**: SpringDoc-OpenAPI 2.x
+- **Documentação da API**: SpringDoc-OpenAPI 2.x
 - **Testes**: JUnit 5 + Mockito + TestContainers
 
 ### DevOps
-- **Containerização**: Docker
+- **Contêineres**: Docker
 - **Orquestração**: Docker Compose
 - **CI/CD**: GitHub Actions
 - **Versionamento**: Git/GitHub
 
 ---
 
-## Iniciando Localmente
+## Como Rodar Localmente
 
 ### Pré-requisitos
 - Java 17+
@@ -56,8 +56,8 @@ Sistema web completo para gerenciamento de estoque e vendas de uma loja especial
 ### Opção 1: Com Docker Compose (Recomendado)
 
 ```bash
-git clone https://github.com/seu-usuario/hardware-store-unicep.git
-cd hardware-store-unicep
+git clone https://github.com/felipemchdev/hardware_store_uniproject.git
+cd hardware_store_uniproject
 
 docker-compose up -d
 
@@ -69,7 +69,7 @@ docker-compose up -d
 ### Opção 2: Desenvolvimento Local
 
 ```bash
-export SPRING_PROFILES_ACTIVE=dev
+set SPRING_PROFILES_ACTIVE=dev
 
 createdb hardware_store -U postgres
 
@@ -80,7 +80,7 @@ createdb hardware_store -U postgres
 
 ---
 
-## Exemplo de Uso da API
+## Exemplos de Uso da API
 
 ### 1. Login
 
@@ -97,7 +97,7 @@ curl -X GET http://localhost:8080/api/produtos \
   -H "Authorization: Bearer <TOKEN>"
 ```
 
-### 3. Registrar Venda
+### 3. Registrar uma Venda
 
 ```bash
 curl -X POST http://localhost:8080/api/vendas \
@@ -145,13 +145,13 @@ com.lojahardware.unicep/
 
 | Decisão | Justificativa |
 |---------|---------------|
-| Spring Boot 3.x | Framework consolidado, excelente suporte |
+| Spring Boot 3.x | Framework consolidado, excelente suporte da comunidade |
 | PostgreSQL | Robustez, transações ACID, escalabilidade |
-| JWT Stateless | Sem dependência de sessão, escalável |
-| Liquibase | Versionamento de schema, rollbacks |
-| TestContainers | Testes com BD real, fidedigno |
-| Gradle | Configuração como código, performance |
-| By-Feature | Escalabilidade, coesão entre domínios |
+| JWT Stateless | Sem dependência de sessão no servidor, escalável |
+| Liquibase | Versionamento de schema, rollbacks, rastreabilidade |
+| TestContainers | Testes com banco real, não em memória, mais fidedigno |
+| Gradle | Configuração como código, cache de build, performance |
+| By-Feature | Coesão por domínio, facilita adicionar novas funcionalidades |
 
 ---
 
