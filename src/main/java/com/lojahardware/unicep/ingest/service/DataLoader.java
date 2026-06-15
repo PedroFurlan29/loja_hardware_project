@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-@org.springframework.context.annotation.Profile("!test")
 public class DataLoader implements CommandLineRunner {
 
     private final DummyJsonIngestService ingestService;
