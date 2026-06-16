@@ -1,0 +1,148 @@
+﻿.product-page {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.loading-screen,
+.error-screen {
+  width: 100%;
+  max-width: 980px;
+  padding: 32px;
+  text-align: center;
+  color: #333;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(14, 21, 47, 0.08);
+}
+
+.product-grid {
+  width: min(1180px, 100%);
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 360px 1fr;
+}
+
+.product-visual-card,
+.product-detail-card {
+  padding: 24px;
+  border-radius: 24px;
+}
+
+.product-image {
+  height: 320px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #f4f6ff 0%, #e8ecff 100%);
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+}
+
+.image-emoji {
+  font-size: 5rem;
+}
+
+.product-image-details {
+  display: grid;
+  gap: 8px;
+}
+
+.product-type,
+.product-sku {
+  color: #616161;
+  font-size: 0.95rem;
+}
+
+.product-title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.product-title-row h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2.4vw, 2.6rem);
+}
+
+.status-chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.status-chip.out-of-stock {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 22px 0 18px;
+}
+
+.price-label {
+  color: #757575;
+  font-weight: 600;
+}
+
+.price-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.product-meta-row {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.product-description,
+.tech-specs {
+  margin-bottom: 24px;
+}
+
+.product-description h2,
+.tech-specs h2 {
+  margin-bottom: 12px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #37474f;
+}
+
+.product-description p {
+  margin: 0;
+  color: #424242;
+  line-height: 1.7;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.spec-row:last-child {
+  border-bottom: none;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.qty-field {
+  width: 140px;
+}
+
+button[mat-flat-button] {
+  min-width: 220px;
+}
