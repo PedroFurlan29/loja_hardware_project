@@ -1,46 +1,103 @@
-package com.lojahardware.unicep.vendas.service;
+# Hardware Store - Sistema de Gestao de Estoque e Vendas
 
-import com.lojahardware.unicep.estoque.service.EstoqueService;
-import com.lojahardware.unicep.produtos.model.Produto;
-import com.lojahardware.unicep.produtos.repository.ProdutoRepository;
-import com.lojahardware.unicep.usuarios.model.Usuario;
-import com.lojahardware.unicep.usuarios.repository.UsuarioRepository;
-import com.lojahardware.unicep.vendas.model.*;
-import com.lojahardware.unicep.vendas.repository.VendaRepository;
-import com.lojahardware.unicep.shared.exception.ApiException;
-import com.lojahardware.unicep.vendas.controller.VendaController;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.math.BigDecimal;
-import java.util.List;
+**Disciplina**: Programacao Orientada a Objetos
+**Universidade**: UNICEP
+**Alunos**: Felipe Machado, Lucas Simel Sodatti, Lucas Galhardi Cury, Pedro Scaramel Furlan
+---
 
-@Service @Slf4j
-public class VendaService {
-    private final VendaRepository repo;
-    private final ProdutoRepository produtoRepo;
-    private final UsuarioRepository usuarioRepo;
-    private final EstoqueService estoqueService;
-    public VendaService(VendaRepository r,ProdutoRepository p,UsuarioRepository u,EstoqueService e){ repo=r;produtoRepo=p;usuarioRepo=u;estoqueService=e; }
-    @Transactional public Venda registrar(VendaController.VendaRequest req){
-        String email=SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario user=usuarioRepo.findByEmail(email).orElseThrow(()->ApiException.notFound("User"));
-        Venda v=new Venda(); v.setUsuario(user);
-        for(var i:req.getItens()){
-            Produto p=produtoRepo.findById(i.getProdutoId()).orElseThrow(()->ApiException.notFound("Produto"));
-            estoqueService.baixar(p.getId(),i.getQuantidade());
-            ItemVenda iv=new ItemVenda(); iv.setProduto(p); iv.setQuantidade(i.getQuantidade());
-            iv.setPrecoUnitario(p.getPrecoVenda()); iv.setVenda(v); v.getItens().add(iv);
-        }
-        v.calcularTotal(); v.setStatus(StatusVenda.CONCLUIDA); Venda saved=repo.save(v); log.info("Venda {} registrada",saved.getId()); return saved;
-    }
-    @Transactional public void cancelar(Long vendaId,String motivo){
-        Venda v=repo.findById(vendaId).orElseThrow(()->ApiException.notFound("Venda"));
-        if(v.getStatus()==StatusVenda.CANCELADA) throw ApiException.badRequest("Already cancelled");
-        for(ItemVenda i:v.getItens()) estoqueService.repor(i.getProduto().getId(),i.getQuantidade());
-        v.setStatus(StatusVenda.CANCELADA); v.setMotivoCancelamento(motivo); repo.save(v);
-    }
-    public Venda buscarPorId(Long id){ return repo.findById(id).orElseThrow(()->ApiException.notFound("Venda")); }
-    public List<Venda> listar(){ return repo.findAll(); }
-}
+## Visao Geral
+
+Sistema web para gerenciamento de estoque e vendas de loja de hardware.
+Spring Boot 3.3 + H2/PostgreSQL + JWT + Maven.
+
+### Funcionalidades
+- Autenticacao JWT stateless (login por email)
+- CRUD de produtos (CPU, GPU, Memoria, Armazenamento)
+- Controle de estoque com nivel minimo critico
+- Registro e cancelamento de vendas
+- Seed de dados iniciais (usuarios + produto CPU)
+
+---
+
+## Tecnologias
+
+- Build: Maven 3.9+
+- Framework: Spring Boot 3.3.2
+- Banco: H2 (dev/test), PostgreSQL (producao)
+- ORM: Spring Data JPA + Hibernate
+- Seguranca: Spring Security 6 + JWT (JJWT 0.11.5)
+- Validacao: Jakarta Bean Validation
+- Java: 17+
+---
+
+## Como Rodar
+
+Pre-requisitos: Java 17+, Maven 3.9+
+
+```
+git clone <repo>
+cd <repo>
+mvn spring-boot:run
+# API: http://localhost:8080/api
+# H2 Console: http://localhost:8080/api/h2-console
+```
+
+```
+mvn test
+```
+
+---
+
+## Usuarios de Seed
+
+| Email | Senha | Perfil |
+|---|---|---|
+| admin@loja.com | admin123 | ADMIN |
+| vendedor@loja.com | vendedor123 | VENDEDOR |
+| estoquista@loja.com | estoquista123 | ESTOQUISTA |
+---
+
+## Endpoints da API
+
+Base URL: http://localhost:8080/api
+
+### Autenticacao
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| POST | /auth/login | Login (email + senha) -> token JWT |
+
+### Produtos
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| GET | /produtos?p=0&s=10 | Listar paginado |
+| GET | /produtos/{id} | Buscar por ID |
+| POST | /produtos | Criar produto |
+| PUT | /produtos/{id} | Atualizar produto |
+
+### Estoque
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| GET | /estoque/{produtoId} | Consultar estoque |
+| POST | /estoque | Criar registro |
+| PUT | /estoque/{produtoId}/baixar | Baixar quantidade |
+| PUT | /estoque/{produtoId}/repor | Repor quantidade |
+
+### Vendas
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| GET | /vendas | Listar vendas |
+| GET | /vendas/{id} | Buscar venda |
+| POST | /vendas | Registrar venda |
+| POST | /vendas/{id}/cancelar | Cancelar venda |
+---
+
+## Exemplos de Uso
+
+### Login
+```bash
+curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{"email":"admin@loja.com","senha":"admin123"}"
+```
