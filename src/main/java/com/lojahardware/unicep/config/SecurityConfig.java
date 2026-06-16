@@ -28,7 +28,7 @@ public class SecurityConfig {
             .csrf(c->c.disable())
             .exceptionHandling(e->e.authenticationEntryPoint(entryPoint))
             .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(a->a.requestMatchers("/auth/**","/h2-console/**").permitAll()
+            .authorizeHttpRequests(a->a.requestMatchers("/auth/**","/produtos/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated());
         http.addFilterBefore(filter,UsernamePasswordAuthenticationFilter.class);

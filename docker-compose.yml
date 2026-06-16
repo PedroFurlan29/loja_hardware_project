@@ -43,6 +43,19 @@ services:
       - hardware_network
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hardware_store_frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - hardware_network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
 

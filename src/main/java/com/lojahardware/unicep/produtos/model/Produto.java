@@ -53,6 +53,12 @@ public abstract class Produto extends BaseEntity {
     @Column(name = "imagem_url")
     private String imagemUrl;
 
+    @Column(name = "preco_oferta")
+    private BigDecimal precoOferta;
+
+    @Column(name = "em_oferta", nullable = false)
+    private Boolean emOferta = false;
+
     public abstract String getDescricaoTecnica();
 
     public boolean isEstoqueCritico() {

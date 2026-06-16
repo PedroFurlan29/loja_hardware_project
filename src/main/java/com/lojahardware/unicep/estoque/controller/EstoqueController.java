@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class EstoqueController {
     private final EstoqueService service;
     public EstoqueController(EstoqueService s){ service=s; }
+    @GetMapping("/criticos") public ResponseEntity<?> criticos(){ return ResponseEntity.ok(service.listarCriticos()); }
     @GetMapping("/{produtoId}") public ResponseEntity<Estoque> buscar(@PathVariable Long produtoId){ return ResponseEntity.ok(service.buscarPorProdutoId(produtoId)); }
     @PostMapping public ResponseEntity<Estoque> criar(@RequestBody CriarEstoqueRequest req){ return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(req.produtoId,req.quantidade,req.estoqueMinimo)); }
     @PutMapping("/{produtoId}/baixar") public ResponseEntity<?> baixar(@PathVariable Long produtoId,@RequestBody BaixarRequest req){ service.baixar(produtoId,req.quantidade); return ResponseEntity.ok().build(); }

@@ -1,84 +1,51 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
-import { LoginRequest, LoginResponse, RefreshTokenRequest } from "../models/auth.models";
-import { environment } from "../../../environments/environment";
-import { Usuario } from "../models/usuario.models";
+import { Injectable, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+
+export interface UserInfo {
+  id: number;
+  nome: string;
+  email: string;
+  perfil: 'ADMIN' | 'VENDEDOR' | 'ESTOQUISTA';
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/auth`;
-  private usuarioLogadoSubject = new BehaviorSubject<Usuario | null>(this.getUsuarioAtual());
-  usuarioLogado$ = this.usuarioLogadoSubject.asObservable();
+  private _user = signal<UserInfo | null>(null);
 
-  constructor(private http: HttpClient) {}
+  readonly user = this._user.asReadonly();
+  readonly isLoggedIn = computed(() => this._user() !== null);
+  readonly isAdmin = computed(() => this._user()?.perfil === 'ADMIN');
+  readonly isVendedor = computed(() => this._user()?.perfil === 'VENDEDOR' || this._user()?.perfil === 'ADMIN');
+  readonly isEstoquista = computed(() => this._user()?.perfil === 'ESTOQUISTA' || this._user()?.perfil === 'ADMIN');
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials)
-      .pipe(
-        tap(response => {
-          localStorage.setItem('authToken', response.accessToken);
-          if (response.refreshToken) {
-            localStorage.setItem('refreshToken', response.refreshToken);
-          }
-          localStorage.setItem('usuario', JSON.stringify(response.user));
-          this.usuarioLogadoSubject.next(response.user);
-        })
-      );
+  constructor(private http: HttpClient, private router: Router) {
+    this.tryRestoreSession();
   }
 
-  registrar(userData: any): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/registrar`, userData)
-      .pipe(
-        tap(response => {
-          localStorage.setItem('authToken', response.accessToken);
-          if (response.refreshToken) {
-            localStorage.setItem('refreshToken', response.refreshToken);
-          }
-          localStorage.setItem('usuario', JSON.stringify(response.user));
-          this.usuarioLogadoSubject.next(response.user);
-        })
-      );
+  tryRestoreSession() {
+    if (typeof window === 'undefined') return;
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    this.http.get<UserInfo>(`${environment.apiUrl}/auth/me`).subscribe({
+      next: (user) => this._user.set(user),
+      error: () => this.logout()
+    });
   }
 
-  logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('usuario');
-    this.usuarioLogadoSubject.next(null);
+  setUser(user: UserInfo) {
+    this._user.set(user);
+  }
+
+  logout() {
+    if (typeof window !== 'undefined') localStorage.removeItem('token');
+    this._user.set(null);
+    this.router.navigate(['/']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('authToken');
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.getToken();
-  }
-
-  getUsuarioAtual(): Usuario | null {
-    const usuarioJson = localStorage.getItem('usuario');
-    return usuarioJson ? JSON.parse(usuarioJson) as Usuario : null;
-  }
-
-  refreshToken(): Observable<LoginResponse> {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) {
-      throw new Error('Refresh token not found');
-    }
-    return this.http.post<LoginResponse>(`${this.apiUrl}/refresh`, { refreshToken } as RefreshTokenRequest)
-      .pipe(
-        tap(response => {
-          localStorage.setItem('authToken', response.accessToken);
-          if (response.refreshToken) {
-            localStorage.setItem('refreshToken', response.refreshToken);
-          }
-        })
-      );
-  }
-
-  logoutRemote(): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/logout`, {});
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('token');
   }
 }
