@@ -1,6 +1,6 @@
 # Hardware Store - Sistema de Gestão de Estoque e Vendas
 
-**Disciplina**: Programação Orientada a Objetos  
+**Disciplina**: Programação Orientada a Objetos 
 **Universidade**: Centro Universitário Central Paulista (UNICEP)  
 **Trabalho**: T2 - Implementação Web, Qualidade e Implantação  
 **Alunos**: Felipe Machado, Lucas Simel Sodatti, Lucas Galhardi Cury, Pedro Scaramel Furlan
