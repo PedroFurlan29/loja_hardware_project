@@ -4,7 +4,6 @@ import com.lojahardware.unicep.usuarios.model.Usuario;
 import com.lojahardware.unicep.usuarios.repository.UsuarioRepository;
 import com.lojahardware.unicep.shared.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

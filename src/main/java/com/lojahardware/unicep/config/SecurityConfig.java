@@ -2,7 +2,6 @@ package com.lojahardware.unicep.config;
 
 import com.lojahardware.unicep.shared.security.JwtAuthenticationEntryPoint;
 import com.lojahardware.unicep.shared.security.JwtAuthenticationFilter;
-import com.lojahardware.unicep.usuarios.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,7 +9,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,10 +19,9 @@ import java.util.Arrays;
 @Configuration @EnableWebSecurity
 public class SecurityConfig {
     private final JwtAuthenticationEntryPoint entryPoint;
-    private final UsuarioService usuarioService;
     private final JwtAuthenticationFilter filter;
-    public SecurityConfig(JwtAuthenticationEntryPoint e,UsuarioService u,JwtAuthenticationFilter f){ entryPoint=e;usuarioService=u;filter=f; }
-    @Bean public PasswordEncoder passwordEncoder(){ return NoOpPasswordEncoder.getInstance(); }
+    public SecurityConfig(JwtAuthenticationEntryPoint e,JwtAuthenticationFilter f){ entryPoint=e;filter=f; }
+    @Bean public PasswordEncoder passwordEncoder(){ return new BCryptPasswordEncoder(); }
     @Bean public AuthenticationManager authenticationManager(AuthenticationConfiguration c) throws Exception { return c.getAuthenticationManager(); }
     @Bean public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(co->co.configurationSource(r->{ var cfg=new CorsConfiguration(); cfg.setAllowedOrigins(Arrays.asList("*")); cfg.setAllowedMethods(Arrays.asList("*")); cfg.setAllowedHeaders(Arrays.asList("*")); return cfg; }))

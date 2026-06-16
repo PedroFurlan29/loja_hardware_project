@@ -1,7 +1,6 @@
 package com.lojahardware.unicep.usuarios.controller;
 
 import com.lojahardware.unicep.shared.util.JwtUtil;
-import com.lojahardware.unicep.usuarios.service.UsuarioService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +14,7 @@ import java.util.*;
 public class AuthController {
     private final AuthenticationManager authManager;
     private final JwtUtil jwtUtil;
-    private final UsuarioService usuarioService;
-    public AuthController(AuthenticationManager a,JwtUtil j,UsuarioService u){ authManager=a;jwtUtil=j;usuarioService=u; }
+    public AuthController(AuthenticationManager a,JwtUtil j){ authManager=a;jwtUtil=j; }
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req){
         try{
