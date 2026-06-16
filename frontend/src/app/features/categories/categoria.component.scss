@@ -1,0 +1,131 @@
+$orange: #E8650A;
+$dark:   #1C1C1E;
+
+.section {
+  padding: 40px 48px;
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: $dark;
+    margin: 0;
+  }
+
+  .section-link {
+    font-size: 13px;
+    color: $orange;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.loading,
+.empty-state {
+  color: #888;
+  font-size: 14px;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.prod-card {
+  cursor: pointer;
+  border: 1px solid #E8E6E0;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0 !important;
+  box-shadow: none !important;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  }
+
+  .prod-img {
+    background: #F0EDE8;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    .prod-emoji { font-size: 48px; }
+
+    .prod-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+
+      &.tag-sale { background: $orange; color: #fff; }
+      &.tag-new  { background: $dark; color: #fff; }
+    }
+  }
+
+  .prod-info { padding: 14px 16px !important; }
+
+  .prod-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: $dark;
+    margin: 0 0 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .prod-brand {
+    font-size: 11px;
+    color: #999;
+    margin: 0 0 8px;
+  }
+
+  .prod-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .prod-prices { display: flex; align-items: center; gap: 4px; }
+    .prod-old { font-size: 11px; color: #bbb; text-decoration: line-through; }
+    .prod-price { font-size: 15px; font-weight: 700; color: $orange; }
+
+    .add-btn {
+      width: 28px !important;
+      height: 28px !important;
+      background: $dark !important;
+      color: #fff !important;
+      box-shadow: none !important;
+
+      &:hover { background: $orange !important; }
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+      }
+    }
+  }
+}
