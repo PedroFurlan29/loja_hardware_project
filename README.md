@@ -1,13 +1,13 @@
 # Hardware Store - Sistema de Gestao de Estoque e Vendas
 
-**Disciplina**: Programacao Orientada a Objetos
-**Universidade**: UNICEP
+**Disciplina**: POO | **Universidade**: UNICEP
 **Alunos**: Felipe Machado, Lucas Simel Sodatti, Lucas Galhardi Cury, Pedro Scaramel Furlan
+
 ---
 
 ## Visao Geral
 
-Sistema web para gerenciamento de estoque e vendas de loja de hardware.
+Sistema web para gestao de estoque e vendas de loja de hardware.
 Spring Boot 3.3 + H2/PostgreSQL + JWT + Maven.
 
 ### Funcionalidades
@@ -15,7 +15,7 @@ Spring Boot 3.3 + H2/PostgreSQL + JWT + Maven.
 - CRUD de produtos (CPU, GPU, Memoria, Armazenamento)
 - Controle de estoque com nivel minimo critico
 - Registro e cancelamento de vendas
-- Seed de dados iniciais (usuarios + produto CPU)
+- Seed de dados iniciais
 
 ---
 
@@ -24,15 +24,12 @@ Spring Boot 3.3 + H2/PostgreSQL + JWT + Maven.
 - Build: Maven 3.9+
 - Framework: Spring Boot 3.3.2
 - Banco: H2 (dev/test), PostgreSQL (producao)
-- ORM: Spring Data JPA + Hibernate
 - Seguranca: Spring Security 6 + JWT (JJWT 0.11.5)
-- Validacao: Jakarta Bean Validation
 - Java: 17+
+
 ---
 
 ## Como Rodar
-
-Pre-requisitos: Java 17+, Maven 3.9+
 
 ```
 git clone <repo>
@@ -48,6 +45,40 @@ mvn test
 
 ---
 
+## Docker
+
+```
+docker-compose up -d
+```
+
+Servicos:
+- Backend: http://localhost:8080/api
+- Frontend: http://localhost:4200
+
+### Build manual
+
+```
+mvn clean package -DskipTests
+docker build -t hardware-store .
+```
+
+---
+
+## Frontend
+
+Angular 22 + Angular Material.
+
+```
+cd frontend
+npm install
+npm start
+# Abrir: http://localhost:4200
+```
+
+Em producao, o docker-compose sobe o frontend buildado via nginx.
+
+---
+
 ## Usuarios de Seed
 
 | Email | Senha | Perfil |
@@ -55,6 +86,7 @@ mvn test
 | admin@loja.com | admin123 | ADMIN |
 | vendedor@loja.com | vendedor123 | VENDEDOR |
 | estoquista@loja.com | estoquista123 | ESTOQUISTA |
+
 ---
 
 ## Endpoints da API
@@ -93,11 +125,23 @@ Base URL: http://localhost:8080/api
 | GET | /vendas/{id} | Buscar venda |
 | POST | /vendas | Registrar venda |
 | POST | /vendas/{id}/cancelar | Cancelar venda |
+
 ---
 
 ## Exemplos de Uso
 
 ### Login
 ```bash
-curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{"email":"admin@loja.com","senha":"admin123"}"
+curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"email\":\"admin@loja.com\",\"senha\":\"admin123\"}"
 ```
+
+### Registrar Venda
+```bash
+curl -X POST http://localhost:8080/api/vendas -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d "{\"itens\":[{\"produtoId\":1,\"quantidade\":2}]}"
+```
+
+---
+
+## Licenca
+
+MIT (c) 2026 UNICEP Hardware Store
