@@ -136,14 +136,24 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('HOME INIT');
+  
     this.apiService.getProdutos(0, 10).subscribe({
-      next: (res: any) => {
+      next: (res) => {
+        console.log('NEXT EXECUTOU');
+        console.log(res);
+  
         this.produtos = res.content || [];
         this.loading = false;
       },
-      error: () => {
-        this.toast.error('Erro ao carregar produtos.');
+      error: (err) => {
+        console.log('ERROR EXECUTOU');
+        console.log(err);
+  
         this.loading = false;
+      },
+      complete: () => {
+        console.log('COMPLETE EXECUTOU');
       }
     });
   }
