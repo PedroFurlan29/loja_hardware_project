@@ -1,0 +1,120 @@
+<mat-toolbar color="primary" class="toolbar">
+  <a class="toolbar-logo" routerLink="/">
+    <div class="logo-icon">
+      <mat-icon>build</mat-icon>
+    </div>
+    Hardware Store
+  </a>
+
+  <span class="spacer"></span>
+
+  <div class="search-wrap">
+    <mat-icon>search</mat-icon>
+    <input matInput placeholder="Buscar ferramentas, materiais..." (keyup.enter)="pesquisar()">
+  </div>
+
+  <button mat-icon-button aria-label="Notificações">
+    <mat-icon>notifications_none</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="Favoritos">
+    <mat-icon>favorite_border</mat-icon>
+  </button>
+  <button mat-icon-button class="cart-btn" aria-label="Carrinho">
+    <mat-icon [matBadge]="cartCount" matBadgeColor="warn" matBadgeSize="small">shopping_cart</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="Conta">
+    <mat-icon>person_outline</mat-icon>
+  </button>
+</mat-toolbar>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">Novidades — Maio 2025</p>
+    <h1 class="hero-title">Acessórios que<br><span class="accent">fazem acontecer</span></h1>
+    <p class="hero-sub">Da Placa de Video à Monitores — tudo para seu computador.</p>
+    <div class="hero-actions">
+      <button mat-flat-button color="warn" class="btn-hero" (click)="verOfertas()">
+        <mat-icon>bolt</mat-icon> Ver ofertas do dia
+      </button>
+      <button mat-stroked-button class="btn-hero-secondary" (click)="explorarCatalogo()">
+        Explorar catálogo
+      </button>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat" *ngFor="let s of stats">
+      <div class="stat-num">{{ s.value }}<span class="accent">{{ s.suffix }}</span></div>
+      <div class="stat-label">{{ s.label }}</div>
+    </div>
+  </div>
+</section>
+
+<!-- Categorias -->
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title">Categorias</h2>
+    <a class="section-link" routerLink="categorias">Ver todas <mat-icon inline>arrow_forward</mat-icon></a>
+  </div>
+  <div class="categories-grid">
+    <mat-card class="cat-card" *ngFor="let cat of categorias" [routerLink]="['/categoria', cat.nome]">
+      <div class="cat-icon" [style.background]="cat.bgColor">
+        <mat-icon [style.color]="cat.iconColor">{{ cat.icon }}</mat-icon>
+      </div>
+      <div class="cat-name">{{ cat.nome }}</div>
+      <div class="cat-count">{{ cat.quantidade }} produtos</div>
+    </mat-card>
+  </div>
+</section>
+
+<!-- Banner Promocional -->
+<div class="promo-banner">
+  <div class="promo-text">
+    <p class="promo-label">Oferta especial</p>
+    <p class="promo-headline">Até 40% off em ferramentas elétricas</p>
+    <p class="promo-sub">Só até domingo — parcele em até 12x sem juros</p>
+  </div>
+  <button mat-flat-button class="btn-white" (click)="verPromocao()">Aproveitar oferta</button>
+</div>
+
+<!-- Mais Vendidos -->
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title">Mais vendidos</h2>
+    <a class="section-link" routerLink="/produtos">Ver todos <mat-icon inline>arrow_forward</mat-icon></a>
+  </div>
+  <div class="products-grid">
+    <mat-card class="prod-card" *ngFor="let prod of produtosDestaque">
+      <div class="prod-img">
+        <span class="prod-emoji">{{ prod.emoji }}</span>
+        <span class="prod-tag" *ngIf="prod.tag" [ngClass]="'tag-' + prod.tag.tipo">
+          {{ prod.tag.label }}
+        </span>
+      </div>
+      <mat-card-content class="prod-info">
+        <p class="prod-name">{{ prod.nome }}</p>
+        <p class="prod-brand">{{ prod.marca }}</p>
+        <div class="prod-footer">
+          <div class="prod-prices">
+            <span class="prod-old" *ngIf="prod.precoAntigo">R$ {{ prod.precoAntigo | number:'1.2-2' }}</span>
+            <span class="prod-price">R$ {{ prod.preco | number:'1.2-2' }}</span>
+          </div>
+          <button mat-mini-fab class="add-btn" aria-label="Adicionar ao carrinho"
+                  (click)="adicionarAoCarrinho(prod); $event.stopPropagation()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+
+<footer class="footer">
+  <span>© 2025 Hardware Store. Todos os direitos reservados.</span>
+  <div class="footer-links">
+    <a routerLink="/sobre">Sobre</a>
+    <a routerLink="/contato">Contato</a>
+    <a routerLink="/privacidade">Privacidade</a>
+    <a routerLink="/devolucao">Devolução</a>
+  </div>
+</footer>

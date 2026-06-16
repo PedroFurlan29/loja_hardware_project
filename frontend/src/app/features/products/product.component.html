@@ -1,0 +1,67 @@
+﻿<div class="product-page">
+  <div *ngIf="carregando" class="loading-screen">Carregando produto...</div>
+
+  <ng-container *ngIf="!carregando">
+    <ng-container *ngIf="produto; else errorTpl">
+      <div class="product-grid">
+        <mat-card class="product-visual-card">
+          <div class="product-image">
+            <div class="image-emoji">{{ produtoEmoji }}</div>
+          </div>
+          <div class="product-image-details">
+            <div class="product-type">{{ produto.categoria || 'Sem categoria' }}</div>
+            <div class="product-sku">SKU: {{ produto.sku }}</div>
+          </div>
+        </mat-card>
+
+        <mat-card class="product-detail-card">
+          <div class="product-title-row">
+            <h1>{{ produto.nome }}</h1>
+            <span class="status-chip" [class.out-of-stock]="!produto.quantidadeDisponivel || produto.quantidadeDisponivel <= 0">
+              {{ produto.quantidadeDisponivel && produto.quantidadeDisponivel > 0 ? 'Em estoque' : 'Sem estoque' }}
+            </span>
+          </div>
+
+          <div class="price-row">
+            <div class="price-label">Preço</div>
+            <div class="price-value">R$ {{ produto.preco | number:'1.2-2' }}</div>
+          </div>
+
+          <div class="product-meta-row">
+            <div>Estoque: <strong>{{ produto.quantidadeDisponivel || 0 }}</strong></div>
+            <div>mínimo: <strong>{{ produto.estoqueMinimo || 0 }}</strong></div>
+          </div>
+
+          <div class="product-description" *ngIf="produto.descricao">
+            <h2>Descrição</h2>
+            <p>{{ produto.descricao }}</p>
+          </div>
+
+          <div class="tech-specs">
+            <h2>Especificações</h2>
+            <div class="spec-row"><span>Categoria</span><span>{{ produto.categoria || 'N/A' }}</span></div>
+            <div class="spec-row"><span>Quantidade em estoque</span><span>{{ produto.quantidadeDisponivel || 0 }}</span></div>
+            <div class="spec-row"><span>Estoque mínimo</span><span>{{ produto.estoqueMinimo || 0 }}</span></div>
+            <div class="spec-row"><span>Status</span><span>{{ produto.ativo ? 'Ativo' : 'Inativo' }}</span></div>
+          </div>
+
+          <div class="actions-row">
+            <mat-form-field appearance="outline" class="qty-field">
+              <mat-label>Quantidade</mat-label>
+              <input matInput type="number" min="1" [(ngModel)]="quantidade">
+            </mat-form-field>
+            <button mat-flat-button color="warn" (click)="adicionarAoCarrinho()" [disabled]="!produto.quantidadeDisponivel || produto.quantidadeDisponivel <= 0">
+              Adicionar ao carrinho
+            </button>
+          </div>
+        </mat-card>
+      </div>
+    </ng-container>
+
+    <ng-template #errorTpl>
+      <div class="error-screen">
+        <p>{{ erro || 'Produto não encontrado.' }}</p>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
