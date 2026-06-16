@@ -1,47 +1,32 @@
 package com.lojahardware.unicep.usuarios.controller;
 
-import com.lojahardware.unicep.usuarios.model.LoginRequestDTO;
-import com.lojahardware.unicep.usuarios.model.UsuarioDTO;
-import com.lojahardware.unicep.usuarios.service.AutenticacaoService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import com.lojahardware.unicep.shared.util.JwtUtil;
+import com.lojahardware.unicep.usuarios.service.UsuarioService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import java.util.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@RestController
-@RequestMapping("/auth")
-@Slf4j
-@Tag(name = "Authentication", description = "Endpoints para autenticação")
+@RestController @RequestMapping("/auth") @Slf4j
 public class AuthController {
-
-    private final AutenticacaoService autenticacaoService;
-
-    public AuthController(AutenticacaoService autenticacaoService) {
-        this.autenticacaoService = autenticacaoService;
-    }
-
+    private final AuthenticationManager authManager;
+    private final JwtUtil jwtUtil;
+    private final UsuarioService usuarioService;
+    public AuthController(AuthenticationManager a,JwtUtil j,UsuarioService u){ authManager=a;jwtUtil=j;usuarioService=u; }
     @PostMapping("/login")
-    @Operation(summary = "Login", description = "Autentica usuário e retorna JWT")
-    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
-        String token = autenticacaoService.autenticar(loginRequest);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        response.put("type", "Bearer");
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> login(@RequestBody LoginRequest req){
+        try{
+            var auth=authManager.authenticate(new UsernamePasswordAuthenticationToken(req.getEmail(),req.getSenha()));
+            UserDetails userDetails=(UserDetails)auth.getPrincipal();
+            String token=jwtUtil.generateToken(userDetails);
+            return ResponseEntity.ok(Map.of("token",token,"type","Bearer"));
+        }catch(Exception e){
+            return ResponseEntity.status(401).body(Map.of("error","Invalid credentials"));
+        }
     }
-
-    @PostMapping("/registrar")
-    @Operation(summary = "Registrar usuário", description = "Cria um novo usuário no sistema")
-    public ResponseEntity<UsuarioDTO> registrar(@Valid @RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDTO usuarioCriado = autenticacaoService.registrar(usuarioDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCriado);
-    }
+    @Data public static class LoginRequest { private String email; private String senha; }
 }
