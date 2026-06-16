@@ -5,123 +5,42 @@ import com.lojahardware.unicep.produtos.model.Produto;
 import com.lojahardware.unicep.produtos.repository.ProdutoRepository;
 import com.lojahardware.unicep.usuarios.model.Usuario;
 import com.lojahardware.unicep.usuarios.repository.UsuarioRepository;
-import com.lojahardware.unicep.vendas.model.ItemVenda;
-import com.lojahardware.unicep.vendas.model.StatusVenda;
-import com.lojahardware.unicep.vendas.model.Venda;
-import com.lojahardware.unicep.vendas.model.VendaRequestDTO;
+import com.lojahardware.unicep.vendas.model.*;
 import com.lojahardware.unicep.vendas.repository.VendaRepository;
 import com.lojahardware.unicep.shared.exception.ApiException;
-import com.lojahardware.unicep.shared.util.AuditContextHolder;
+import com.lojahardware.unicep.vendas.controller.VendaController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.math.BigDecimal;
 import java.util.List;
 
-@Service
-@Slf4j
+@Service @Slf4j
 public class VendaService {
-
-    private final VendaRepository vendaRepository;
-    private final ProdutoRepository produtoRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final VendaRepository repo;
+    private final ProdutoRepository produtoRepo;
+    private final UsuarioRepository usuarioRepo;
     private final EstoqueService estoqueService;
-
-    public VendaService(VendaRepository vendaRepository, ProdutoRepository produtoRepository,
-                       UsuarioRepository usuarioRepository, EstoqueService estoqueService) {
-        this.vendaRepository = vendaRepository;
-        this.produtoRepository = produtoRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.estoqueService = estoqueService;
-    }
-
-    @Transactional
-    public Venda registrarVenda(VendaRequestDTO vendaRequest) {
-        String emailDoContexto = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario usuario = usuarioRepository.findByEmail(emailDoContexto)
-                .orElseThrow(() -> ApiException.unauthorized("User not found"));
-
-        Venda venda = new Venda();
-        venda.setUsuario(usuario);
-        venda.setStatus(StatusVenda.PENDENTE);
-
-        for (var itemRequest : vendaRequest.getItens()) {
-            Produto produto = produtoRepository.findById(itemRequest.getProdutoId())
-                    .orElseThrow(() -> ApiException.notFound("Produto not found"));
-
-            try {
-                estoqueService.buscarPorProdutoId(produto.getId());
-            } catch (ApiException e) {
-                throw ApiException.badRequest("No stock available for product: " + produto.getSku());
-            }
-
-            ItemVenda item = new ItemVenda();
-            item.setProduto(produto);
-            item.setQuantidade(itemRequest.getQuantidade());
-            item.setPrecoUnitario(produto.getPrecoVenda());
-
-            venda.adicionarItem(item);
+    public VendaService(VendaRepository r,ProdutoRepository p,UsuarioRepository u,EstoqueService e){ repo=r;produtoRepo=p;usuarioRepo=u;estoqueService=e; }
+    @Transactional public Venda registrar(VendaController.VendaRequest req){
+        String email=SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario user=usuarioRepo.findByEmail(email).orElseThrow(()->ApiException.notFound("User"));
+        Venda v=new Venda(); v.setUsuario(user);
+        for(var i:req.getItens()){
+            Produto p=produtoRepo.findById(i.getProdutoId()).orElseThrow(()->ApiException.notFound("Produto"));
+            estoqueService.baixar(p.getId(),i.getQuantidade());
+            ItemVenda iv=new ItemVenda(); iv.setProduto(p); iv.setQuantidade(i.getQuantidade());
+            iv.setPrecoUnitario(p.getPrecoVenda()); iv.setVenda(v); v.getItens().add(iv);
         }
-
-        venda.calcularTotal();
-
-        try {
-            for (ItemVenda item : venda.getItens()) {
-                estoqueService.baixar(item.getProduto().getId(), item.getQuantidade());
-            }
-        } catch (ApiException e) {
-            throw ApiException.badRequest("Insufficient stock: " + e.getMessage());
-        }
-
-        venda.setStatus(StatusVenda.CONCLUIDA);
-        Venda vendaSalva = vendaRepository.save(venda);
-
-        AuditContextHolder.registrarAcao(usuario.getId(), "Venda registrada", vendaSalva.getId());
-        log.info("Venda {} registrada pelo usuário {}", vendaSalva.getId(), usuario.getEmail());
-
-        return vendaSalva;
+        v.calcularTotal(); v.setStatus(StatusVenda.CONCLUIDA); Venda saved=repo.save(v); log.info("Venda {} registrada",saved.getId()); return saved;
     }
-
-    @Transactional
-    public void cancelarVenda(Long vendaId, String motivo) {
-        Venda venda = vendaRepository.findById(vendaId)
-                .orElseThrow(() -> ApiException.notFound("Venda not found"));
-
-        if (venda.getStatus() == StatusVenda.CANCELADA) {
-            throw ApiException.badRequest("Venda already cancelled");
-        }
-
-        for (ItemVenda item : venda.getItens()) {
-            estoqueService.repor(item.getProduto().getId(), item.getQuantidade());
-        }
-
-        venda.setStatus(StatusVenda.CANCELADA);
-        venda.setMotivoCancelamento(motivo);
-        vendaRepository.save(venda);
-
-        String emailDoContexto = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario admin = usuarioRepository.findByEmail(emailDoContexto).orElse(null);
-        if (admin != null) {
-            AuditContextHolder.registrarAcao(admin.getId(), "Venda cancelada", venda.getId());
-        }
-
-        log.info("Venda {} cancelada com motivo: {}", vendaId, motivo);
+    @Transactional public void cancelar(Long vendaId,String motivo){
+        Venda v=repo.findById(vendaId).orElseThrow(()->ApiException.notFound("Venda"));
+        if(v.getStatus()==StatusVenda.CANCELADA) throw ApiException.badRequest("Already cancelled");
+        for(ItemVenda i:v.getItens()) estoqueService.repor(i.getProduto().getId(),i.getQuantidade());
+        v.setStatus(StatusVenda.CANCELADA); v.setMotivoCancelamento(motivo); repo.save(v);
     }
-
-    @Transactional(readOnly = true)
-    public Venda buscarPorId(Long id) {
-        return vendaRepository.findById(id)
-                .orElseThrow(() -> ApiException.notFound("Venda not found with id: " + id));
-    }
-
-    @Transactional(readOnly = true)
-    public List<Venda> listarTodas() {
-        return vendaRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public List<Venda> listarPorStatus(StatusVenda status) {
-        return vendaRepository.findByStatus(status);
-    }
+    public Venda buscarPorId(Long id){ return repo.findById(id).orElseThrow(()->ApiException.notFound("Venda")); }
+    public List<Venda> listar(){ return repo.findAll(); }
 }
