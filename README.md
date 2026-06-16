@@ -1,160 +1,103 @@
-# Hardware Store - Sistema de Gestão de Estoque e Vendas
+# Hardware Store - Sistema de Gestao de Estoque e Vendas
 
-**Disciplina**: Programação Orientada a Objetos  
-**Universidade**: Centro Universitário Central Paulista (UNICEP)  
-**Trabalho**: T2 - Implementação Web, Qualidade e Implantação  
+**Disciplina**: Programacao Orientada a Objetos
+**Universidade**: UNICEP
 **Alunos**: Felipe Machado, Lucas Simel Sodatti, Lucas Galhardi Cury, Pedro Scaramel Furlan
-
 ---
 
-## Visão Geral
+## Visao Geral
 
-Sistema web completo para gerenciamento de estoque e vendas de uma loja especializada em hardware, implementado com **Spring Boot 3.x**, **PostgreSQL**, **JWT** e **Docker Compose**.
+Sistema web para gerenciamento de estoque e vendas de loja de hardware.
+Spring Boot 3.3 + H2/PostgreSQL + JWT + Maven.
 
-### Funcionalidades Principais
-- Autenticação JWT stateless
-- Gestão de produtos (CPU, GPU, Memória, Armazenamento)
-- Controle de estoque com nível mínimo crítico
-- Registro e cancelamento de vendas com auditoria
-- Ingestão automática de dados (DummyJSON)
-- API REST documentada via Swagger/OpenAPI
-- Testes automatizados (JUnit 5 + TestContainers)
-- CI/CD via GitHub Actions
-- Docker Compose para deploy rápido
+### Funcionalidades
+- Autenticacao JWT stateless (login por email)
+- CRUD de produtos (CPU, GPU, Memoria, Armazenamento)
+- Controle de estoque com nivel minimo critico
+- Registro e cancelamento de vendas
+- Seed de dados iniciais (usuarios + produto CPU)
 
 ---
 
 ## Tecnologias
 
-### Backend
-- **Framework**: Spring Boot 3.3.x
-- **Build**: Gradle (Kotlin DSL)
-- **Banco de Dados**: PostgreSQL 15
-- **ORM**: Spring Data JPA + Hibernate
-- **Migrações**: Liquibase
-- **Autenticação**: Spring Security 6.x + JWT (JJWT 0.12.3)
-- **Validação**: Jakarta Bean Validation
-- **Documentação da API**: SpringDoc-OpenAPI 2.x
-- **Testes**: JUnit 5 + Mockito + TestContainers
-
-### DevOps
-- **Contêineres**: Docker
-- **Orquestração**: Docker Compose
-- **CI/CD**: GitHub Actions
-- **Versionamento**: Git/GitHub
-
+- Build: Maven 3.9+
+- Framework: Spring Boot 3.3.2
+- Banco: H2 (dev/test), PostgreSQL (producao)
+- ORM: Spring Data JPA + Hibernate
+- Seguranca: Spring Security 6 + JWT (JJWT 0.11.5)
+- Validacao: Jakarta Bean Validation
+- Java: 17+
 ---
 
-## Como Rodar Localmente
+## Como Rodar
 
-### Pré-requisitos
-- Java 17+
-- Gradle 8+
-- Docker + Docker Compose (opcional, para BD isolado)
-- PostgreSQL 15 (se não usar Docker)
+Pre-requisitos: Java 17+, Maven 3.9+
 
-### Opção 1: Com Docker Compose (Recomendado)
-
-```bash
-git clone https://github.com/PedroFurlan29/loja_hardware_project.git
-cd loja_hardware_project
-
-docker-compose up -d
-
-# Acesse:
-# - API: http://localhost:8080/api
-# - Swagger: http://localhost:8080/api/swagger-ui.html
+```
+git clone <repo>
+cd <repo>
+mvn spring-boot:run
+# API: http://localhost:8080/api
+# H2 Console: http://localhost:8080/api/h2-console
 ```
 
-### Opção 2: Desenvolvimento Local
-
-```bash
-set SPRING_PROFILES_ACTIVE=dev
-
-createdb hardware_store -U postgres
-
-./gradlew bootRun
-
-# http://localhost:8080/api/swagger-ui.html
+```
+mvn test
 ```
 
 ---
 
-## Exemplos de Uso da API
+## Usuarios de Seed
 
-### 1. Login
-
-```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@example.com","senha":"123456"}'
-```
-
-### 2. Listar Produtos
-
-```bash
-curl -X GET http://localhost:8080/api/produtos \
-  -H "Authorization: Bearer <TOKEN>"
-```
-
-### 3. Registrar uma Venda
-
-```bash
-curl -X POST http://localhost:8080/api/vendas \
-  -H "Authorization: Bearer <TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{"itens": [{"produtoId": 1, "quantidade": 2}]}'
-```
-
+| Email | Senha | Perfil |
+|---|---|---|
+| admin@loja.com | admin123 | ADMIN |
+| vendedor@loja.com | vendedor123 | VENDEDOR |
+| estoquista@loja.com | estoquista123 | ESTOQUISTA |
 ---
 
-## Testes
+## Endpoints da API
 
+Base URL: http://localhost:8080/api
+
+### Autenticacao
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| POST | /auth/login | Login (email + senha) -> token JWT |
+
+### Produtos
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| GET | /produtos?p=0&s=10 | Listar paginado |
+| GET | /produtos/{id} | Buscar por ID |
+| POST | /produtos | Criar produto |
+| PUT | /produtos/{id} | Atualizar produto |
+
+### Estoque
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| GET | /estoque/{produtoId} | Consultar estoque |
+| POST | /estoque | Criar registro |
+| PUT | /estoque/{produtoId}/baixar | Baixar quantidade |
+| PUT | /estoque/{produtoId}/repor | Repor quantidade |
+
+### Vendas
+
+| Metodo | Rota | Descricao |
+|---|---|---|
+| GET | /vendas | Listar vendas |
+| GET | /vendas/{id} | Buscar venda |
+| POST | /vendas | Registrar venda |
+| POST | /vendas/{id}/cancelar | Cancelar venda |
+---
+
+## Exemplos de Uso
+
+### Login
 ```bash
-./gradlew test
+curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{"email":"admin@loja.com","senha":"admin123"}"
 ```
-
----
-
-## Arquitetura
-
-### Estrutura de Pacotes (By-Feature)
-```
-com.lojahardware.unicep/
-├── config/
-├── shared/
-│   ├── exception/
-│   ├── util/
-│   ├── security/
-│   └── model/
-├── produtos/
-│   ├── model/
-│   ├── controller/
-│   ├── service/
-│   └── repository/
-├── estoque/
-├── vendas/
-├── usuarios/
-├── fornecedores/
-└── ingest/
-```
-
----
-
-## Decisões Arquiteturais
-
-| Decisão | Justificativa |
-|---------|---------------|
-| Spring Boot 3.x | Framework consolidado, excelente suporte da comunidade |
-| PostgreSQL | Robustez, transações ACID, escalabilidade |
-| JWT Stateless | Sem dependência de sessão no servidor, escalável |
-| Liquibase | Versionamento de schema, rollbacks, rastreabilidade |
-| TestContainers | Testes com banco real, não em memória, mais fidedigno |
-| Gradle | Configuração como código, cache de build, performance |
-| By-Feature | Coesão por domínio, facilita adicionar novas funcionalidades |
-
----
-
-## Licença
-
-MIT © 2026 UNICEP Hardware Store
