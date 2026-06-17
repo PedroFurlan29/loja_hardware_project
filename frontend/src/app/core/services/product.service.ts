@@ -43,7 +43,7 @@ export class ProductService {
         }
       });
     }
-    
+
     return this.http.get<ApiPage<BackendProduto>>(this.apiUrl, { params }).pipe(
       map(response => this.mapPageResponse(response))
     );

@@ -24,7 +24,6 @@ public class ProdutoDTO {
     private String descricaoTecnica;
     private String tipoProduto;
     
-    // Campos específicos por tipo
     private String marca;
     private String modelo;
     private Integer nucleos;
