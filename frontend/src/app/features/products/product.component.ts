@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +21,8 @@ export class ProductComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -31,6 +32,7 @@ export class ProductComponent implements OnInit {
       if (!id) {
         this.erro = 'Produto inválido';
         this.carregando = false;
+        this.cdr.detectChanges();
         return;
       }
 
@@ -38,10 +40,12 @@ export class ProductComponent implements OnInit {
         next: produto => {
           this.produto = produto;
           this.carregando = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.erro = 'Não foi possível carregar o produto.';
           this.carregando = false;
+          this.cdr.detectChanges();
         }
       });
     });
