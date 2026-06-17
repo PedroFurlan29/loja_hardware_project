@@ -80,7 +80,7 @@ export class LoginComponent {
   demoUsers = [
     { label: 'Admin', email: 'admin@loja.com', senha: 'admin123' },
     { label: 'Vendedor', email: 'vendedor@loja.com', senha: 'vendedor123' },
-    { label: 'Estoquista', email: 'estoquista@loja.com', senha: 'estoquista123' },
+    { label: 'Cliente', email: 'cliente@loja.com', senha: 'cliente123' },
   ];
 
   constructor(

@@ -33,7 +33,7 @@ public class DataLoader implements CommandLineRunner {
         log.info("=== DataLoader: seed idempotente ===");
         criarUsuarioSeNaoExiste("Admin",       "admin@loja.com",       "admin123",       PerfilUsuario.ADMIN);
         criarUsuarioSeNaoExiste("Vendedor",    "vendedor@loja.com",    "vendedor123",    PerfilUsuario.VENDEDOR);
-        criarUsuarioSeNaoExiste("Estoquista",  "estoquista@loja.com",  "estoquista123",  PerfilUsuario.ESTOQUISTA);
+        criarUsuarioSeNaoExiste("Cliente",  "cliente@loja.com",  "cliente123",  PerfilUsuario.CLIENTE);
 
         // ── CPUs ──────────────────────────────────────────────────────────────────
         salvar(cpu("CPU-001","Intel Core i9-14900K 24-Core 3.2GHz LGA1700",5999.99,4200,8,3,"https://m.media-amazon.com/images/I/61E8jdBSBKL._AC_SL1500_.jpg","Intel","i9-14900K",24,3.2,"Raptor Lake Refresh","LGA1700"));

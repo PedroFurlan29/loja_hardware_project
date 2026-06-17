@@ -18,6 +18,7 @@ export class ProductComponent implements OnInit {
   quantidade = 1;
   carregando = true;
   erro = '';
+  imagemFalhou = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +29,7 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
+      this.imagemFalhou = false;
 
       if (!id) {
         this.erro = 'Produto inválido';

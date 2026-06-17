@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -26,7 +26,6 @@ import { ToastService } from '../../shared/services/toast.service';
 
         <form (ngSubmit)="checkout()" class="grid grid-cols-1 lg:grid-cols-5 gap-6" *ngIf="(cart$ | async)?.length">
 
-          <!-- Form -->
           <div class="lg:col-span-3 space-y-4">
 
             <div class="bg-ck-surface border border-ck-border rounded p-5">
@@ -76,7 +75,6 @@ import { ToastService } from '../../shared/services/toast.service';
 
           </div>
 
-          <!-- Order summary -->
           <div class="lg:col-span-2">
             <div class="bg-ck-surface border border-t-2 border-ck-border border-t-ck-accent rounded p-5 sticky top-28">
               <h2 class="text-sm font-bold text-white uppercase mb-4 pb-3 border-b border-ck-border">Seu Pedido</h2>
@@ -120,7 +118,8 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private apiService: ApiService,
     private toast: ToastService,
-    public router: Router
+    public router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.cart$ = this.cartService.cart$;
   }
@@ -146,6 +145,8 @@ export class CheckoutComponent implements OnInit {
       next: () => {
         this.toast.success('Pedido realizado com sucesso! Obrigado pela compra.');
         this.cartService.clearCart();
+        this.isLoading = false;
+        this.cdr.detectChanges();
         setTimeout(() => this.router.navigate(['/']), 2000);
       },
       error: (err: any) => {
@@ -155,6 +156,7 @@ export class CheckoutComponent implements OnInit {
         this.toast.error(msg);
         if (err.status === 401) this.router.navigate(['/login']);
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }

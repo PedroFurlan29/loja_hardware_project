@@ -7,7 +7,7 @@ export interface UserInfo {
   id: number;
   nome: string;
   email: string;
-  perfil: 'ADMIN' | 'VENDEDOR' | 'ESTOQUISTA';
+  perfil: 'ADMIN' | 'VENDEDOR' | 'CLIENTE';
 }
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +18,7 @@ export class AuthService {
   readonly isLoggedIn = computed(() => this._user() !== null);
   readonly isAdmin = computed(() => this._user()?.perfil === 'ADMIN');
   readonly isVendedor = computed(() => this._user()?.perfil === 'VENDEDOR' || this._user()?.perfil === 'ADMIN');
-  readonly isEstoquista = computed(() => this._user()?.perfil === 'ESTOQUISTA' || this._user()?.perfil === 'ADMIN');
+  readonly isCliente = computed(() => this._user()?.perfil === 'CLIENTE');
 
   constructor(private http: HttpClient, private router: Router) {
     this.tryRestoreSession();

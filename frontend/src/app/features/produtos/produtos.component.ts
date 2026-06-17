@@ -43,20 +43,30 @@ export class ProdutosComponent implements OnInit {
 
   loadProdutos() {
     this.loading = true;
-    this.productService.getProdutos(this.page, 20).subscribe({
+    this.productService.getProdutos(this.page, 100).subscribe({
       next: (res) => {
         let data: Produto[] = res.data || [];
+        console.log('TOTAL DATA:', data.length);
+        console.log('CATEGORIA:', this.categoria);
+        console.log('PRIMEIROS 5:', data.slice(0, 5).map(p => ({ nome: p.nome, categoria: p.categoria })));
+        
         if (this.categoria) {
-          data = data.filter((p) =>
-            (p.categoria || '').toLowerCase() === this.categoria.toLowerCase()
-          );
+          data = data.filter((p) => {
+            const match = (p.categoria || '').toLowerCase() === this.categoria.toLowerCase();
+            console.log('FILTER:', p.nome, 'cat:', p.categoria, 'match:', match);
+            return match;
+          });
         }
+        
         if (this.searchTerm) {
           data = data.filter((p) =>
             p.nome?.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
         }
+        
         data = this.sortProdutos(data);
+        
+        console.log('AFTER FILTER:', data.length);
         this.produtos = data;
         this.hasMore = res.count > (this.page + 1) * 20;
         this.loading = false;

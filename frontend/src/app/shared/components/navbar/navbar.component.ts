@@ -100,19 +100,19 @@ import { map } from 'rxjs';
 
       <!-- Category bar -->
       <div class="bg-[#141414] border-b border-ck-border hidden md:block">
-        <div class="max-w-[1400px] mx-auto px-4 flex items-center h-10 gap-0 text-xs font-medium text-ck-muted">
-          <a routerLink="/produtos" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Todos</a>
-          <a routerLink="/produtos" [queryParams]="{categoria:'CPU', label:'Processadores'}" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Processadores</a>
-          <a routerLink="/produtos" [queryParams]="{categoria:'PlacaDeVideo', label:'Placas de Vídeo'}" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Placas de Vídeo</a>
-          <a routerLink="/produtos" [queryParams]="{categoria:'Memoria', label:'Memórias RAM'}" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Memórias</a>
-          <a routerLink="/produtos" [queryParams]="{categoria:'DispositivoDeArmazenamento', label:'SSDs & HDs'}" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">SSDs & HDs</a>
-          <a routerLink="/produtos" [queryParams]="{oferta:'true', label:'🔥 Ofertas'}" class="px-4 h-full flex items-center text-yellow-400 hover:text-yellow-300 hover:bg-ck-surface transition-colors font-bold">🔥 Ofertas</a>
-          <!-- Admin links -->
+  <div class="max-w-[1400px] mx-auto px-4 flex items-center h-10 gap-0 text-xs font-medium text-ck-muted">
+    <a routerLink="/produtos" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Todos</a>
+    <a routerLink="/produtos" [queryParams]="{categoria:'CPU', label:'Processadores'}" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Processadores</a>
+    <a routerLink="/produtos" [queryParams]="{categoria:'GPU', label:'Placas de Vídeo'}" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Placas de Vídeo</a>
+    <a routerLink="/produtos" [queryParams]="{categoria:'RAM', label:'Memórias RAM'}" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Memórias</a>
+    <a routerLink="/produtos" [queryParams]="{categoria:'SSD', label:'SSDs & HDs'}" class="px-4 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">SSDs & HDs</a>
+    <a routerLink="/produtos" [queryParams]="{oferta:'true', label:'🔥 Ofertas'}" class="px-4 h-full flex items-center text-yellow-400 hover:text-yellow-300 hover:bg-ck-surface transition-colors font-bold">🔥 Ofertas</a>
+          <!-- Admin links - só ADMIN e VENDEDOR veem -->
           <ng-container *ngIf="authService.isLoggedIn()">
             <div class="w-px h-4 bg-ck-border mx-2"></div>
             <a *ngIf="authService.isAdmin()" routerLink="/admin" class="px-3 h-full flex items-center text-ck-accent hover:bg-ck-surface transition-colors">Admin</a>
             <a *ngIf="authService.isVendedor()" routerLink="/admin" [state]="{tab:'vendas'}" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Vendas</a>
-            <a *ngIf="authService.isEstoquista() || authService.isAdmin()" routerLink="/admin" [queryParams]="{tab:'estoque'}" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Estoque</a>
+            <a *ngIf="authService.isAdmin()" routerLink="/admin" [queryParams]="{tab:'estoque'}" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Estoque</a>
           </ng-container>
         </div>
       </div>

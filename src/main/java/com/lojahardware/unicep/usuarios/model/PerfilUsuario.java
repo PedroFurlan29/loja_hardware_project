@@ -3,7 +3,7 @@ package com.lojahardware.unicep.usuarios.model;
 public enum PerfilUsuario {
     ADMIN("Administrador"),
     VENDEDOR("Vendedor"),
-    ESTOQUISTA("Estoquista");
+    CLIENTE("Cliente");
 
     private final String descricao;
 

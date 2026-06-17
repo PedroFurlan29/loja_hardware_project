@@ -6,7 +6,14 @@
       <div class="product-grid">
         <mat-card class="product-visual-card">
           <div class="product-image">
-            <div class="image-emoji">{{ produtoEmoji }}</div>
+            <img
+              *ngIf="produto.imagemUrl && !imagemFalhou"
+              [src]="produto.imagemUrl"
+              [alt]="produto.nome"
+              (error)="imagemFalhou = true"
+              style="max-width: 100%; max-height: 100%; object-fit: contain;"
+            />
+            <div *ngIf="!produto.imagemUrl || imagemFalhou" class="image-emoji">{{ produtoEmoji }}</div>
           </div>
           <div class="product-image-details">
             <div class="product-type">{{ produto.categoria || 'Sem categoria' }}</div>
@@ -24,7 +31,7 @@
 
           <div class="price-row">
             <div class="price-label">Preço</div>
-            <div class="price-value">R$ {{ produto.preco | number:'1.2-2' }}</div>
+            <div class="price-value">R$ {{ produto.preco | number:'1.2-2':'pt-BR' }}</div>
           </div>
 
           <div class="product-meta-row">
