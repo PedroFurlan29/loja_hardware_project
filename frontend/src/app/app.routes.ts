@@ -6,6 +6,7 @@ import { CarrinhoComponent } from './features/carrinho/carrinho.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { LoginComponent } from './features/auth/login.component';
 import { AdminComponent } from './features/admin/admin.component';
+import { RegisterComponent } from './features/register/register.component';
 import { MeusPedidosComponent } from './features/meus-pedidos/meus-pedidos.component';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
@@ -24,5 +25,4 @@ export const routes: Routes = [
   { path: 'registrar', component: RegisterComponent },
   { path: 'meus-pedidos', component: MeusPedidosComponent },
   { path: '**', redirectTo: '' }
-]; redirectTo: '' }
 ];
