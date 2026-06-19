@@ -3,7 +3,6 @@ package com.lojahardware.unicep.usuarios.controller;
 import com.lojahardware.unicep.shared.util.JwtUtil;
 import com.lojahardware.unicep.usuarios.service.UsuarioService;
 import com.lojahardware.unicep.usuarios.model.Usuario;
-import com.lojahardware.unicep.usuarios.model.PerfilUsuario;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -47,9 +46,9 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("error","Not authenticated"));
         }
     }
-    @Data public static class LoginRequest { private String email; private String senha; }
-}
-> lista = usuarioService.listarVendedores().stream()
+    @GetMapping("/vendedores")
+    public ResponseEntity<List<Map<String,Object>>> vendedores(){
+        List<Map<String,Object>> lista = usuarioService.listarVendedores().stream()
             .map(v -> Map.<String,Object>of("id",v.getId(),"nome",v.getNome(),"email",v.getEmail()))
             .collect(Collectors.toList());
         return ResponseEntity.ok(lista);
