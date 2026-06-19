@@ -37,7 +37,8 @@ export class CategoriaComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private produtoService: ProductService
+    private produtoService: ProductService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {

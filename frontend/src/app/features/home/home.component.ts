@@ -23,7 +23,8 @@ export class HomeComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private toast: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {

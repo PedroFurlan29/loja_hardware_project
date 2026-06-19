@@ -126,6 +126,8 @@ export class ProdutoDetalheComponent implements OnInit {
     private cartService: CartService,
     private toast: ToastService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
