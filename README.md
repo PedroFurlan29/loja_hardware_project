@@ -5,7 +5,7 @@
 
 ---
 
-## Visao Geral
+## Visão Geral
 
 Sistema web para gestao de estoque e vendas de loja de hardware.
 Spring Boot 3.3 + H2/PostgreSQL + JWT + Maven.
@@ -51,7 +51,7 @@ mvn test
 docker-compose up -d
 ```
 
-Servicos:
+Serviços:
 - Backend: http://localhost:8080/api
 - Frontend: http://localhost:4200
 
@@ -75,11 +75,11 @@ npm start
 # Abrir: http://localhost:4200
 ```
 
-Em producao, o docker-compose sobe o frontend buildado via nginx.
+Em produção, o docker-compose sobe o frontend buildado via nginx.
 
 ---
 
-## Usuarios de Seed
+## Usuários de Seed
 
 | Email | Senha | Perfil |
 |---|---|---|
@@ -96,15 +96,15 @@ Em producao, o docker-compose sobe o frontend buildado via nginx.
 
 Base URL: http://localhost:8080/api
 
-### Autenticacao
+### Autenticação
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |---|---|---|
 | POST | /auth/login | Login (email + senha) -> token JWT |
 
 ### Produtos
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |---|---|---|
 | GET | /produtos?p=0&s=10 | Listar paginado |
 | GET | /produtos/{id} | Buscar por ID |
@@ -113,7 +113,7 @@ Base URL: http://localhost:8080/api
 
 ### Estoque
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |---|---|---|
 | GET | /estoque/{produtoId} | Consultar estoque |
 | POST | /estoque | Criar registro |
@@ -122,7 +122,7 @@ Base URL: http://localhost:8080/api
 
 ### Vendas
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |---|---|---|
 | GET | /vendas | Listar vendas |
 | GET | /vendas/{id} | Buscar venda |
