@@ -305,7 +305,8 @@ export class AdminComponent implements OnInit {
     public authService: AuthService,
     private api: ApiService,
     private toast: ToastService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -353,6 +354,7 @@ export class AdminComponent implements OnInit {
         this.toast.success(`Fornecedor "${f.nome}" cadastrado!`);
         this.novoFornecedor = { nome: '', cnpj: '', email: '', telefone: '', endereco: '' };
         this.showFornecedorForm = false;
+        this.cdr.detectChanges();
       },
       error: (e: any) => this.toast.error(e.error?.message || 'Erro ao cadastrar fornecedor.')
     });

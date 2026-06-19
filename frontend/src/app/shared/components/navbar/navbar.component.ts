@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -8,7 +9,7 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <header class="sticky top-0 z-50 w-full">
 
@@ -25,11 +26,11 @@ import { map } from 'rxjs';
           <!-- Search -->
           <div class="flex-1 max-w-2xl mx-4">
             <div class="relative">
-              <input type="text" placeholder="Busque produtos, marcas e categorias..."
+              <input #searchInput type="text" [(ngModel)]="searchQuery" placeholder="Busque produtos, marcas e categorias..."
                 class="w-full h-10 pl-4 pr-12 text-sm bg-[#1a1a1a] border border-ck-border text-ck-text placeholder-ck-muted rounded focus:outline-none focus:border-ck-accent transition-colors"
-                (keydown.enter)="router.navigate(['/produtos'])"
+                (keydown.enter)="search()"
               />
-              <button (click)="router.navigate(['/produtos'])"
+              <button (click)="search()"
                 class="absolute right-0 top-0 h-10 w-12 flex items-center justify-center bg-ck-accent hover:bg-ck-accentHover rounded-r transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
               </button>
@@ -123,6 +124,7 @@ import { map } from 'rxjs';
 export class NavbarComponent {
   @Output() themeToggle = new EventEmitter<void>();
   cartCount$;
+  searchQuery = '';
 
   constructor(
     public authService: AuthService,
@@ -132,5 +134,13 @@ export class NavbarComponent {
     this.cartCount$ = this.cartService.cart$.pipe(
       map(items => items.reduce((acc, item) => acc + item.quantidade, 0))
     );
+  }
+
+  search() {
+    const query = this.searchQuery.trim();
+    this.router.navigate(['/produtos'], {
+      queryParams: { q: query || null },
+      queryParamsHandling: 'merge'
+    });
   }
 }

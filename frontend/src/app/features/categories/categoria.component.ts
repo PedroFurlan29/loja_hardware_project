@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { Produto } from '../../core/models/produto.models';
 import { Categoria } from '../../core/models/categoria.models';
@@ -66,12 +66,14 @@ export class CategoriaComponent implements OnInit {
       next: (produtos: Produto[]) => {
         this.produtos = produtos || [];
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Erro ao carregar produtos:', error);
         this.erro = 'Não foi possível carregar os produtos.';
         this.produtos = [];
         this.carregando = false;
+        this.cdr.detectChanges();
       }
     });
   }

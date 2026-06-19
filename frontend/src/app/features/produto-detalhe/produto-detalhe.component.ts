@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { getCategoryFallbackSvg } from '../../shared/utils/category-images';
 
 @Component({
   selector: 'app-produto-detalhe',
@@ -39,13 +41,11 @@ import { ToastService } from '../../shared/services/toast.service';
           <!-- Image -->
           <div class="bg-ck-surface border border-ck-border rounded-md p-8 flex items-center justify-center aspect-square">
             <img
-              *ngIf="produto.imagemUrl"
-              [src]="produto.imagemUrl"
+              [src]="getImagemSrc(produto)"
               [alt]="produto.descricao"
               class="max-w-full max-h-full object-contain"
               (error)="onImgError($event)"
             />
-            <svg *ngIf="!produto.imagemUrl" class="w-32 h-32 opacity-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/><path d="m14 14 3-3-3-3"/></svg>
           </div>
 
           <!-- Info -->
@@ -133,8 +133,8 @@ export class ProdutoDetalheComponent implements OnInit {
     if (!id) { this.loading = false; return; }
 
     this.apiService.getProdutoById(+id).subscribe({
-      next: (p: any) => { this.produto = p; this.loading = false; },
-      error: () => { this.loading = false; this.toast.error('Produto não encontrado.'); }
+      next: (p: any) => { this.produto = p; this.loading = false; this.cdr.detectChanges(); },
+      error: () => { this.loading = false; this.cdr.detectChanges(); this.toast.error('Produto não encontrado.'); }
     });
   }
 
@@ -179,6 +179,16 @@ export class ProdutoDetalheComponent implements OnInit {
   }
 
   onImgError(event: Event) {
-    (event.target as HTMLImageElement).style.display = 'none';
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+  }
+
+  getImagemSrc(produto: any): string {
+    if (produto?.imagemUrl) return produto.imagemUrl;
+    return 'data:image/svg+xml,' + encodeURIComponent(getCategoryFallbackSvg(produto?.sku?.replace(/-\d+$/, '')));
+  }
+
+  getFallbackSvg(produto: any): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(getCategoryFallbackSvg(produto?.sku?.replace(/-\d+$/, '')));
   }
 }

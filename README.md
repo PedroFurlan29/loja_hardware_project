@@ -1,6 +1,6 @@
 # Hardware Store - Sistema de Gestao de Estoque e Vendas
 
-**Disciplina**: POO | **Universidade**: UNICEP
+**Disciplina**: Engenharia de Software | **Universidade**: UNICEP
 **Alunos**: Felipe Machado, Lucas Simel Sodatti, Lucas Galhardi Cury, Pedro Scaramel Furlan
 
 ---

@@ -1,10 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { Produto } from '../../core/models/produto.models';
+import { getCategoryFallbackSvg } from '../../shared/utils/category-images';
 
 @Component({
   selector: 'app-home',
@@ -62,6 +64,20 @@ export class HomeComponent implements OnInit {
   }
 
   onImgError(event: Event) {
-    (event.target as HTMLImageElement).style.display = 'none';
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+  }
+
+  getImagemSrc(produto: Produto): string {
+    if (produto.imagemUrl) return produto.imagemUrl;
+    return this.svgToDataUrl(getCategoryFallbackSvg(produto.categoria));
+  }
+
+  getFallbackSvg(produto: Produto): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(getCategoryFallbackSvg(produto.categoria));
+  }
+
+  private svgToDataUrl(svg: string): string {
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
   }
 }
