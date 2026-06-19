@@ -3,6 +3,7 @@ package com.lojahardware.unicep.usuarios.controller;
 import com.lojahardware.unicep.shared.util.JwtUtil;
 import com.lojahardware.unicep.usuarios.service.UsuarioService;
 import com.lojahardware.unicep.usuarios.model.Usuario;
+import com.lojahardware.unicep.usuarios.model.PerfilUsuario;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
