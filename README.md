@@ -86,6 +86,7 @@ Em producao, o docker-compose sobe o frontend buildado via nginx.
 | admin@loja.com | admin123 | ADMIN |
 | vendedor@loja.com | vendedor123 | VENDEDOR |
 | cliente@loja.com | cliente123 | CLIENTE |
+| cliente2@loja.com | cliente123 | CLIENTE |
 
 ---
 

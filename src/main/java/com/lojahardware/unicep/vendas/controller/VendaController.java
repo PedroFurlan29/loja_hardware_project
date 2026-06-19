@@ -1,5 +1,6 @@
 package com.lojahardware.unicep.vendas.controller;
 
+import com.lojahardware.unicep.usuarios.repository.UsuarioRepository;
 import com.lojahardware.unicep.vendas.dto.VendaDTO;
 import com.lojahardware.unicep.vendas.dto.VendaMapper;
 import com.lojahardware.unicep.vendas.model.Venda;
@@ -15,32 +16,52 @@ import java.util.*;
 @RequestMapping("/vendas")
 public class VendaController {
     private final VendaService service;
-    public VendaController(VendaService s){ service=s; }
+    private final UsuarioRepository usuarioRepo;
+
+    public VendaController(VendaService s, UsuarioRepository u){ service=s; usuarioRepo=u; }
+
+    private void enrich(List<VendaDTO> list) {
+        list.forEach(dto -> VendaMapper.enrich(dto, usuarioRepo));
+    }
+
+    private void enrich(VendaDTO dto) {
+        VendaMapper.enrich(dto, usuarioRepo);
+    }
 
     @GetMapping
     public ResponseEntity<List<VendaDTO>> listar(){
-        return ResponseEntity.ok(VendaMapper.toDTOList(service.listar()));
+        List<VendaDTO> list = VendaMapper.toDTOList(service.listar());
+        enrich(list);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/minhas")
     public ResponseEntity<List<VendaDTO>> minhasVendas(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok(VendaMapper.toDTOList(service.listarPorUsuario(email)));
+        List<VendaDTO> list = VendaMapper.toDTOList(service.listarPorUsuario(email));
+        enrich(list);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/vendedor/{id}")
     public ResponseEntity<List<VendaDTO>> porVendedor(@PathVariable Long id){
-        return ResponseEntity.ok(VendaMapper.toDTOList(service.listarPorVendedor(id)));
+        List<VendaDTO> list = VendaMapper.toDTOList(service.listarPorVendedor(id));
+        enrich(list);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<VendaDTO> buscar(@PathVariable Long id){
-        return ResponseEntity.ok(VendaMapper.toDTO(service.buscarPorId(id)));
+        VendaDTO dto = VendaMapper.toDTO(service.buscarPorId(id));
+        enrich(dto);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping
     public ResponseEntity<VendaDTO> registrar(@RequestBody VendaRequest req){
-        return ResponseEntity.status(HttpStatus.CREATED).body(VendaMapper.toDTO(service.registrar(req)));
+        VendaDTO dto = VendaMapper.toDTO(service.registrar(req));
+        enrich(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @PostMapping("/{id}/cancelar")

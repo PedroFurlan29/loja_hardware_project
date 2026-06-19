@@ -1,5 +1,6 @@
 package com.lojahardware.unicep.vendas.dto;
 
+import com.lojahardware.unicep.usuarios.repository.UsuarioRepository;
 import com.lojahardware.unicep.vendas.model.ItemVenda;
 import com.lojahardware.unicep.vendas.model.Venda;
 
@@ -27,6 +28,13 @@ public class VendaMapper {
         }
 
         return dto;
+    }
+
+    public static void enrich(VendaDTO dto, UsuarioRepository usuarioRepo) {
+        if (dto.getVendedorReferenciaId() != null) {
+            usuarioRepo.findById(dto.getVendedorReferenciaId())
+                .ifPresent(v -> dto.setVendedorReferenciaNome(v.getNome()));
+        }
     }
 
     public static ItemVendaDTO toItemDTO(ItemVenda item) {

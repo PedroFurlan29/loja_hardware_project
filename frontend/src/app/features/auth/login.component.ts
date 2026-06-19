@@ -56,7 +56,7 @@ import { ToastService } from '../../shared/services/toast.service';
           <!-- Quick login cards -->
           <div class="mt-5 pt-5 border-t border-ck-border">
             <p class="text-[10px] text-ck-muted uppercase font-semibold mb-3 text-center">Login Rápido (Demo)</p>
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-4 gap-2">
               <button *ngFor="let u of demoUsers" (click)="quickLogin(u.email, u.senha)"
                 class="flex flex-col items-center p-2 bg-[#111] border border-ck-border hover:border-ck-accent rounded text-center transition-colors">
                 <div class="w-6 h-6 rounded-full bg-ck-accent/20 text-ck-accent flex items-center justify-center text-xs font-bold mb-1">
@@ -81,6 +81,7 @@ export class LoginComponent {
     { label: 'Admin', email: 'admin@loja.com', senha: 'admin123' },
     { label: 'Vendedor', email: 'vendedor@loja.com', senha: 'vendedor123' },
     { label: 'Cliente', email: 'cliente@loja.com', senha: 'cliente123' },
+    { label: 'Cliente 2', email: 'cliente2@loja.com', senha: 'cliente123' },
   ];
 
   constructor(

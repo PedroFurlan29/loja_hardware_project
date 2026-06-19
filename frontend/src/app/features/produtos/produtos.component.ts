@@ -25,6 +25,7 @@ export class ProdutosComponent implements OnInit {
   sortBy = 'nome';
   categoria = '';
   categoriaLabel = '';
+  oferta = false;
 
   constructor(
     private productService: ProductService,
@@ -40,6 +41,7 @@ export class ProdutosComponent implements OnInit {
       this.categoria = params['categoria'] || '';
       this.categoriaLabel = params['label'] || '';
       this.searchTerm = params['q'] || '';
+      this.oferta = params['oferta'] === 'true';
       this.page = 0;
       this.loadProdutos();
     });
@@ -68,6 +70,10 @@ export class ProdutosComponent implements OnInit {
           );
         }
         
+        if (this.oferta) {
+          data = data.filter((p) => p.precoOriginal != null);
+        }
+        
         data = this.sortProdutos(data);
         
         console.log('AFTER FILTER:', data.length);
@@ -87,6 +93,7 @@ export class ProdutosComponent implements OnInit {
   clearCategoria() {
     this.categoria = '';
     this.categoriaLabel = '';
+    this.oferta = false;
     this.page = 0;
     this.loadProdutos();
   }
