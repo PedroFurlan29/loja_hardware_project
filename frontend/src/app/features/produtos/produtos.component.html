@@ -85,12 +85,14 @@
                   (error)="onImgError($event)"
                 />
                 <div *ngIf="isNovo(produto)" class="absolute top-2 left-2 bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">NOVO</div>
-                <div *ngIf="isEstoqueCritico(produto)" class="absolute top-2 right-2 bg-amber-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Últimas!</div>
+                <div *ngIf="produto.precoOriginal" class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">-{{ getDesconto(produto) }}%</div>
+                <div *ngIf="!produto.precoOriginal && isEstoqueCritico(produto)" class="absolute top-2 right-2 bg-amber-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Últimas!</div>
               </div>
   
               <div class="p-3 flex flex-col flex-1">
                 <h3 class="text-xs text-ck-text font-medium line-clamp-3 min-h-[3.5rem] leading-snug mb-3">{{ produto.descricao }}</h3>
                 <div class="mt-auto">
+                  <p *ngIf="produto.precoOriginal" class="text-xs text-ck-muted line-through">R$ {{ produto.precoOriginal | number:'1.2-2':'pt-BR' }}</p>
                   <p class="text-lg font-bold text-ck-price">R$ {{ produto.preco | number:'1.2-2':'pt-BR' }}</p>
                   <p class="text-[10px] text-ck-muted mt-0.5">12x s/ juros no cartão</p>
                   <button

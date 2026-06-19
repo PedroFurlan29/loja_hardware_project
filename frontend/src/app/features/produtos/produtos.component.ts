@@ -134,6 +134,11 @@ export class ProdutosComponent implements OnInit {
       && produto.quantidadeDisponivel <= produto.estoqueMinimo;
   }
 
+  getDesconto(produto: Produto): number {
+    if (!produto.precoOriginal || produto.precoOriginal <= 0) return 0;
+    return Math.round((1 - produto.preco / produto.precoOriginal) * 100);
+  }
+
   addToCart(produto: Produto, event: Event) {
     event.stopPropagation();
     event.preventDefault();
@@ -142,6 +147,7 @@ export class ProdutosComponent implements OnInit {
       nome: produto.nome,
       preco: produto.preco,
       quantidade: 1,
+      categoria: produto.categoria,
     });
     this.toast.success('Produto adicionado ao carrinho!');
   }

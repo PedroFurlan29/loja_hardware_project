@@ -103,9 +103,12 @@ import { ToastService } from '../../shared/services/toast.service';
                 <span class="w-5 h-5 bg-ck-accent text-white text-xs flex items-center justify-center rounded-full font-bold">3</span>
                 Vendedor que te ajudou?
               </h2>
-              <p class="text-xs text-ck-muted mb-3">Se um vendedor te auxiliou na compra, informe o ID dele para ganhar comissão.</p>
-              <input type="number" [(ngModel)]="vendedorId" name="vendedorId" placeholder="ID do vendedor (opcional)"
-                class="w-full px-3 py-2 text-sm bg-[#111] border border-ck-border text-ck-text rounded focus:outline-none focus:border-ck-accent transition-colors" />
+              <p class="text-xs text-ck-muted mb-3">Se um vendedor te auxiliou na compra, selecione o e-mail dele para ganhar comissão.</p>
+              <select [(ngModel)]="vendedorId" name="vendedorId"
+                class="w-full px-3 py-2 text-sm bg-[#111] border border-ck-border text-ck-text rounded focus:outline-none focus:border-ck-accent transition-colors">
+                <option value="">-- Nenhum --</option>
+                <option *ngFor="let v of vendedores" [value]="v.id">{{ v.email }} ({{ v.nome }})</option>
+              </select>
             </div>
 
           </div>
@@ -150,6 +153,7 @@ export class CheckoutComponent implements OnInit {
   cart$;
   nome = ''; email = ''; telefone = ''; endereco = ''; cidade = ''; cep = '';
   vendedorId: number | null = null;
+  vendedores: any[] = [];
   isLoading = false;
   erroForm = '';
   isCliente = false;
@@ -167,6 +171,12 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit() {
     this.isCliente = this.authService.isLoggedIn() && !this.authService.isAdmin() && !this.authService.isVendedor();
+    if (this.isCliente) {
+      this.apiService.getVendedores().subscribe({
+        next: (v: any[]) => { this.vendedores = v || []; this.cdr.detectChanges(); },
+        error: () => {}
+      });
+    }
   }
 
   getTotal(): number { return this.cartService.getTotal(); }

@@ -40,7 +40,7 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
       </aside>
 
       <!-- Header info para VENDEDOR (sem sidebar) -->
-      <div *ngIf="authService.isVendedor()" class="fixed top-0 left-0 right-0 z-40 bg-[#0a0a0a] border-b border-ck-border h-14 flex items-center px-6">
+      <div *ngIf="isVendedorOnly" class="fixed top-0 left-0 right-0 z-40 bg-[#0a0a0a] border-b border-ck-border h-14 flex items-center px-6">
         <div class="flex items-center gap-3">
           <div class="w-7 h-7 rounded-full bg-ck-accent flex items-center justify-center text-white text-xs font-bold">
             {{ authService.user()?.nome?.charAt(0)?.toUpperCase() }}
@@ -116,11 +116,11 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
         <div *ngIf="activeTab === 'vendas'">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-1 h-6 bg-ck-accent rounded-full"></div>
-            <h1 class="text-xl font-bold text-white">{{ authService.isVendedor() ? 'Minhas Vendas' : 'Gerenciar Vendas' }}</h1>
+            <h1 class="text-xl font-bold text-white">{{ isVendedorOnly ? 'Minhas Vendas' : 'Gerenciar Vendas' }}</h1>
           </div>
 
           <!-- Comissão total (só VENDEDOR vê) -->
-          <div *ngIf="authService.isVendedor()" class="bg-ck-surface border border-ck-border rounded p-4 mb-4 flex items-center justify-between">
+          <div *ngIf="isVendedorOnly" class="bg-ck-surface border border-ck-border rounded p-4 mb-4 flex items-center justify-between">
             <div>
               <p class="text-xs text-ck-muted uppercase font-semibold">Comissões Recebidas (6%)</p>
               <p class="text-2xl font-bold text-green-400 mt-1">R$ {{ totalComissao | number:'1.2-2':'pt-BR' }}</p>
@@ -159,7 +159,7 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
                   </td>
                   <td class="px-4 py-3 text-xs text-ck-muted">{{ v.itens?.length || 0 }} item(ns)</td>
                   <td class="px-4 py-3 text-right font-bold text-ck-price text-sm">R$ {{ v.valorTotal | number:'1.2-2':'pt-BR' }}</td>
-                  <td *ngIf="authService.isVendedor()" class="px-4 py-3 text-right font-bold text-green-400 text-sm">R$ {{ (v.comissao || 0) | number:'1.2-2':'pt-BR' }}</td>
+                  <td *ngIf="isVendedorOnly" class="px-4 py-3 text-right font-bold text-green-400 text-sm">R$ {{ (v.comissao || 0) | number:'1.2-2':'pt-BR' }}</td>
                   <td class="px-4 py-3 text-right">
                     <button *ngIf="v.status !== 'CANCELADA'" (click)="cancelarVenda(v)"
                       class="text-[11px] text-red-400 hover:text-red-300 font-semibold border border-red-900 hover:border-red-500 px-2 py-1 rounded transition-colors">
@@ -331,6 +331,10 @@ export class AdminComponent implements OnInit {
   reporQtd = 1;
   novoFornecedor = { nome: '', cnpj: '', email: '', telefone: '', endereco: '' };
 
+  get isVendedorOnly(): boolean {
+    return this.authService.user()?.perfil === 'VENDEDOR';
+  }
+
   get totalComissao(): number {
     return this.vendas.reduce((acc, v) => acc + (v.comissao || 0), 0);
   }
@@ -352,8 +356,8 @@ export class AdminComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Se for VENDEDOR, força tab de vendas e não mostra mais nada
-    if (this.authService.isVendedor()) {
+    // Se for VENDEDOR (e não ADMIN), força tab de vendas
+    if (this.isVendedorOnly) {
       this.activeTab = 'vendas';
       this.carregarVendas();
       return;

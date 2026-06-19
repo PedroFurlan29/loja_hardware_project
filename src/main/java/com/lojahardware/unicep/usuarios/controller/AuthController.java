@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController @RequestMapping("/auth") @Slf4j
 public class AuthController {
@@ -45,6 +46,13 @@ public class AuthController {
         }catch(Exception e){
             return ResponseEntity.status(401).body(Map.of("error","Not authenticated"));
         }
+    }
+    @Data public static class LoginRequest { private String email; private String senha; }
+}
+> lista = usuarioService.listarVendedores().stream()
+            .map(v -> Map.<String,Object>of("id",v.getId(),"nome",v.getNome(),"email",v.getEmail()))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
     @Data public static class LoginRequest { private String email; private String senha; }
 }

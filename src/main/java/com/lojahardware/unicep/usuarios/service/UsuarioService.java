@@ -36,4 +36,9 @@ public class UsuarioService implements UserDetailsService {
     public Usuario buscarPorId(Long id){ return usuarioRepository.findById(id).orElseThrow(()->ApiException.notFound("Usuario not found: "+id)); }
     @Transactional(readOnly=true)
     public Usuario buscarPorEmail(String email){ return usuarioRepository.findByEmail(email).orElseThrow(()->ApiException.notFound("Usuario not found: "+email)); }
+
+    @Transactional(readOnly=true)
+    public List<Usuario> listarVendedores() {
+        return usuarioRepository.findByPerfil(com.lojahardware.unicep.usuarios.model.PerfilUsuario.VENDEDOR);
+    }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
@@ -52,12 +52,29 @@ export class MeusPedidosComponent implements OnInit {
   pedidos: any[] = [];
   loading = true;
 
-  constructor(private api: ApiService) {}
+  constructor(
+    private api: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
+    this.carregar();
+  }
+
+  private carregar() {
+    this.loading = true;
     this.api.getMinhasVendas().subscribe({
-      next: (v: any[]) => { this.pedidos = v || []; this.loading = false; },
-      error: () => { this.loading = false; }
+      next: (v: any[]) => {
+        this.pedidos = Array.isArray(v) ? v : [];
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar pedidos:', err);
+        this.pedidos = [];
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 }

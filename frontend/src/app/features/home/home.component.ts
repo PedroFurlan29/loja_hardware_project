@@ -52,6 +52,11 @@ export class HomeComponent implements OnInit {
       && produto.quantidadeDisponivel <= produto.estoqueMinimo;
   }
 
+  getDesconto(produto: Produto): number {
+    if (!produto.precoOriginal || produto.precoOriginal <= 0) return 0;
+    return Math.round((1 - produto.preco / produto.precoOriginal) * 100);
+  }
+
   addToCart(produto: Produto, event: Event) {
     event.stopPropagation();
     event.preventDefault();
@@ -60,6 +65,7 @@ export class HomeComponent implements OnInit {
       nome: produto.nome,
       preco: produto.preco,
       quantidade: 1,
+      categoria: produto.categoria,
     });
     this.toast.success(`"${produto.nome.substring(0, 30)}..." adicionado ao carrinho!`);
   }

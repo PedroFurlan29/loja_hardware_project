@@ -5,6 +5,7 @@ export interface Produto {
   nome: string;
   descricao?: string;
   preco: number;
+  precoOriginal?: number;
   sku: string;
   categoria?: string;
   estoqueMinimo?: number;

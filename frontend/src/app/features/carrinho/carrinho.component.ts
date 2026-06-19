@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { getCategoryFallbackSvg } from '../../shared/utils/category-images';
 
 @Component({
   selector: 'app-carrinho',
@@ -24,8 +26,8 @@ import { ToastService } from '../../shared/services/toast.service';
             <div *ngIf="(cart$ | async) as items">
               <div *ngIf="items.length > 0; else emptyCart">
                 <div *ngFor="let item of items" class="bg-ck-surface border border-ck-border rounded p-4 flex gap-4 items-center hover:border-ck-accent transition-colors">
-                  <div class="w-16 h-16 bg-[#111] rounded flex items-center justify-center flex-shrink-0">
-                    <svg class="w-8 h-8 opacity-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/><path d="m14 14 3-3-3-3"/></svg>
+                  <div class="w-16 h-16 bg-[#111] rounded flex items-center justify-center flex-shrink-0 p-2">
+                    <img [src]="getCartImg(item)" class="w-full h-full object-contain" (error)="onImgError($event)" />
                   </div>
                   <div class="flex-1 min-w-0">
                     <p class="text-sm text-ck-text font-medium line-clamp-2">{{ item.nome }}</p>
@@ -83,7 +85,11 @@ import { ToastService } from '../../shared/services/toast.service';
 export class CarrinhoComponent implements OnInit {
   cart$;
 
-  constructor(private cartService: CartService, private toast: ToastService) {
+  constructor(
+    private cartService: CartService,
+    private toast: ToastService,
+    private sanitizer: DomSanitizer
+  ) {
     this.cart$ = this.cartService.cart$;
   }
 
@@ -96,5 +102,15 @@ export class CarrinhoComponent implements OnInit {
 
   getTotal(): number {
     return this.cartService.getTotal();
+  }
+
+  getCartImg(item: any): string {
+    if (item.imagemUrl) return item.imagemUrl;
+    return 'data:image/svg+xml,' + encodeURIComponent(getCategoryFallbackSvg(item.categoria));
+  }
+
+  onImgError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
   }
 }

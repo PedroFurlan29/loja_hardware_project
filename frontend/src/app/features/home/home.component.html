@@ -7,11 +7,10 @@
           Novos Produtos Chegaram
         </span>
         <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
-          Hardware de<br/>
-          <span class="text-ck-price">Alta Performance</span>
+          HardwareStore
         </h1>
         <p class="text-ck-muted text-lg mb-8 max-w-md">
-          CPUs, GPUs, memórias e armazenamento de última geração. Os melhores preços do Brasil.
+          CPUs, GPUs, memórias e armazenamento de última geração. Os melhores preços do Brasil — desde 2026 oferecendo as melhores peças com desconto!
         </p>
         <div class="flex gap-4">
           <a routerLink="/produtos" class="px-8 py-3 bg-ck-accent hover:bg-ck-accentHover text-white font-semibold rounded text-sm uppercase tracking-wide transition-colors">
@@ -83,6 +82,7 @@
 
           <div *ngIf="isNovo(produto)" class="absolute top-2 left-2 bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">NOVO</div>
           <div *ngIf="isEstoqueCritico(produto)" class="absolute top-2 right-2 bg-amber-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Últimas unidades</div>
+          <div *ngIf="produto.precoOriginal" class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">-{{ getDesconto(produto) }}%</div>
         </div>
 
         <div class="p-3 flex flex-col flex-1">
@@ -91,6 +91,7 @@
           </h3>
 
           <div class="mt-auto">
+            <p *ngIf="produto.precoOriginal" class="text-xs text-ck-muted line-through mb-0.5">R$ {{ produto.precoOriginal | number:'1.2-2':'pt-BR' }}</p>
             <p class="text-xl font-bold text-ck-price">
               R$ {{ produto.preco | number:'1.2-2':'pt-BR' }}
             </p>

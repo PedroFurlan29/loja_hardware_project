@@ -17,6 +17,10 @@ export class ApiService {
     return this.http.get(`${API_URL}/auth/me`);
   }
 
+  getVendedores(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_URL}/auth/vendedores`);
+  }
+
   getProdutos(page = 0, size = 20): Observable<any> {
     return this.http.get(`${API_URL}/produtos?p=${page}&s=${size}`);
   }

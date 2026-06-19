@@ -113,6 +113,7 @@ export class ProductService {
       nome: p.descricao,
       descricao: p.descricaoTecnica || p.descricao,
       preco: p.precoOferta || p.precoVenda,
+      precoOriginal: p.precoOferta ? p.precoVenda : undefined,
       sku: p.sku,
       categoria: this.inferCategoria(p.sku),
       estoqueMinimo: p.estoque_minimo,

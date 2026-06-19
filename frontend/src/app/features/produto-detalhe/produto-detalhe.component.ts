@@ -61,8 +61,10 @@ import { getCategoryFallbackSvg } from '../../shared/utils/category-images';
 
             <!-- Price block -->
             <div class="bg-ck-surface border border-ck-border rounded p-4 mb-6">
-              <p class="text-4xl font-bold text-ck-price mb-1">R$ {{ produto.precoVenda | number:'1.2-2':'pt-BR' }}</p>
-              <p class="text-xs text-ck-muted">12x de R$ {{ (produto.precoVenda / 12) | number:'1.2-2':'pt-BR' }} sem juros</p>
+              <p *ngIf="produto.precoOferta" class="text-sm text-ck-muted line-through mb-1">R$ {{ produto.precoVenda | number:'1.2-2':'pt-BR' }}</p>
+              <p class="text-4xl font-bold text-ck-price mb-1">R$ {{ produto.precoOferta || produto.precoVenda | number:'1.2-2':'pt-BR' }}</p>
+              <p *ngIf="produto.precoOferta" class="text-xs text-red-400 font-semibold mb-1">-{{ getPctDesconto(produto.precoVenda, produto.precoOferta) }}% off</p>
+              <p class="text-xs text-ck-muted">12x de R$ {{ ((produto.precoOferta || produto.precoVenda) / 12) | number:'1.2-2':'pt-BR' }} sem juros</p>
               <p class="text-xs text-green-400 mt-1 font-medium">✓ Frete grátis para todo o Brasil</p>
             </div>
 
@@ -148,8 +150,17 @@ export class ProdutoDetalheComponent implements OnInit {
       nome: this.produto.descricao,
       preco: parseFloat(this.produto.precoVenda),
       quantidade: 1,
+      categoria: this.getCategoriaFromSku(this.produto.sku),
     });
     this.toast.success('Produto adicionado ao carrinho!');
+  }
+
+  private getCategoriaFromSku(sku: string): string {
+    if (sku?.startsWith('CPU')) return 'CPU';
+    if (sku?.startsWith('GPU')) return 'GPU';
+    if (sku?.startsWith('RAM')) return 'RAM';
+    if (sku?.startsWith('SSD')) return 'SSD';
+    return '';
   }
 
   addToCartAndGo() {
@@ -184,6 +195,11 @@ export class ProdutoDetalheComponent implements OnInit {
     add('Leitura', this.produto.velocidadeLeituraMBs ? `${this.produto.velocidadeLeituraMBs} MB/s` : null);
 
     return specs;
+  }
+
+  getPctDesconto(original: number, oferta: number): number {
+    if (!original || original <= 0) return 0;
+    return Math.round((1 - oferta / original) * 100);
   }
 
   onImgError(event: Event) {
