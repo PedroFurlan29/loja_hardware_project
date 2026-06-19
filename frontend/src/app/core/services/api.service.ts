@@ -49,12 +49,26 @@ export class ApiService {
     return this.http.put(`${API_URL}/estoque/${produtoId}/baixar`, { quantidade });
   }
 
-  registrarVenda(itens: { produtoId: number; quantidade: number }[]): Observable<any> {
-    return this.http.post(`${API_URL}/vendas`, { itens });
+  registrarVenda(itens: { produtoId: number; quantidade: number }[], vendedorId?: number): Observable<any> {
+    const body: any = { itens };
+    if (vendedorId) body.vendedorId = vendedorId;
+    return this.http.post(`${API_URL}/vendas`, body);
   }
 
   getVendas(): Observable<any> {
     return this.http.get(`${API_URL}/vendas`);
+  }
+
+  getMinhasVendas(): Observable<any> {
+    return this.http.get(`${API_URL}/vendas/minhas`);
+  }
+
+  getVendasPorVendedor(id: number): Observable<any> {
+    return this.http.get(`${API_URL}/vendas/vendedor/${id}`);
+  }
+
+  getVendasTotais(): Observable<any> {
+    return this.http.get(`${API_URL}/vendas/totais`);
   }
 
   getVendaById(id: number): Observable<any> {

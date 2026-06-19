@@ -61,13 +61,17 @@ public class EstoqueService {
     @Transactional
     public void baixar(Long produtoId, Integer quantidade) {
         Estoque estoque = buscarPorProdutoId(produtoId);
-
         if (!estoque.temEstoque(quantidade)) {
             throw ApiException.badRequest("Insufficient stock. Available: " + estoque.getQuantidade());
         }
-
         estoque.baixar(quantidade);
         estoqueRepository.save(estoque);
+
+        // Sincroniza quantidade no Produto
+        Produto p = estoque.getProduto();
+        p.setQuantidade(estoque.getQuantidade());
+        produtoRepository.save(p);
+
         log.info("Stock decreased for product {} by {}", produtoId, quantidade);
     }
 
@@ -76,6 +80,12 @@ public class EstoqueService {
         Estoque estoque = buscarPorProdutoId(produtoId);
         estoque.repor(quantidade);
         estoqueRepository.save(estoque);
+
+        // Sincroniza quantidade no Produto
+        Produto p = estoque.getProduto();
+        p.setQuantidade(estoque.getQuantidade());
+        produtoRepository.save(p);
+
         log.info("Stock replenished for product {} by {}", produtoId, quantidade);
     }
 }

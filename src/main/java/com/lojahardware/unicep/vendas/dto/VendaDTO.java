@@ -17,4 +17,7 @@ public class VendaDTO {
     private BigDecimal valorTotal;
     private String motivoCancelamento;
     private List<ItemVendaDTO> itens;
+    private Long vendedorReferenciaId;
+    private String vendedorReferenciaNome;
+    private BigDecimal comissao;
 }

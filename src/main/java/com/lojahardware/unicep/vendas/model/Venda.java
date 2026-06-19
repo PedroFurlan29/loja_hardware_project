@@ -46,6 +46,12 @@ public class Venda extends BaseEntity {
     @Column(name = "motivo_cancelamento", length = 255)
     private String motivoCancelamento;
 
+    @Column(name = "vendedor_referencia_id")
+    private Long vendedorReferenciaId;
+
+    @Column(name = "comissao", precision = 12, scale = 2)
+    private BigDecimal comissao = BigDecimal.ZERO;
+
     public void calcularTotal() {
         this.valorTotal = this.itens.stream()
                 .map(ItemVenda::getSubtotal)

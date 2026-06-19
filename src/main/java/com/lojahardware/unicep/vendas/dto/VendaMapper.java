@@ -17,6 +17,8 @@ public class VendaMapper {
         dto.setStatus(venda.getStatus() != null ? venda.getStatus().name() : null);
         dto.setValorTotal(venda.getValorTotal());
         dto.setMotivoCancelamento(venda.getMotivoCancelamento());
+        dto.setVendedorReferenciaId(venda.getVendedorReferenciaId());
+        dto.setComissao(venda.getComissao());
 
         if (venda.getItens() != null) {
             dto.setItens(venda.getItens().stream()

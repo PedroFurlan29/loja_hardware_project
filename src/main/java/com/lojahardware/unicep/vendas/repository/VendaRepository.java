@@ -11,4 +11,8 @@ import java.util.List;
 public interface VendaRepository extends JpaRepository<Venda, Long> {
 
     List<Venda> findByStatus(StatusVenda status);
+
+    List<Venda> findByVendedorReferenciaId(Long vendedorReferenciaId);
+
+    List<Venda> findByUsuarioId(Long usuarioId);
 }

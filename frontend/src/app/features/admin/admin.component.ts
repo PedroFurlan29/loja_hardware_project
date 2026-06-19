@@ -74,10 +74,14 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
             <div class="w-1 h-6 bg-ck-accent rounded-full"></div>
             <h1 class="text-xl font-bold text-white">Dashboard</h1>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
             <div class="bg-ck-surface border border-ck-border rounded p-4">
               <p class="text-xs text-ck-muted uppercase font-semibold mb-1">Total Vendas</p>
               <p class="text-2xl font-bold text-white">{{ vendas.length }}</p>
+            </div>
+            <div class="bg-ck-surface border border-ck-border rounded p-4">
+              <p class="text-xs text-ck-muted uppercase font-semibold mb-1">Valor Vendido</p>
+              <p class="text-xl font-bold text-ck-price">R$ {{ totalVendasValor | number:'1.2-2':'pt-BR' }}</p>
             </div>
             <div class="bg-ck-surface border border-ck-border rounded p-4">
               <p class="text-xs text-ck-muted uppercase font-semibold mb-1">Produtos</p>
@@ -112,7 +116,19 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
         <div *ngIf="activeTab === 'vendas'">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-1 h-6 bg-ck-accent rounded-full"></div>
-            <h1 class="text-xl font-bold text-white">Gerenciar Vendas</h1>
+            <h1 class="text-xl font-bold text-white">{{ authService.isVendedor() ? 'Minhas Vendas' : 'Gerenciar Vendas' }}</h1>
+          </div>
+
+          <!-- Comissão total (só VENDEDOR vê) -->
+          <div *ngIf="authService.isVendedor()" class="bg-ck-surface border border-ck-border rounded p-4 mb-4 flex items-center justify-between">
+            <div>
+              <p class="text-xs text-ck-muted uppercase font-semibold">Comissões Recebidas (6%)</p>
+              <p class="text-2xl font-bold text-green-400 mt-1">R$ {{ totalComissao | number:'1.2-2':'pt-BR' }}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-ck-muted">Vendas com sua referência</p>
+              <p class="text-xl font-bold text-white">{{ vendas.length }}</p>
+            </div>
           </div>
 
           <div *ngIf="loadingVendas" class="space-y-2">
@@ -127,6 +143,7 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
                   <th class="px-4 py-3 text-left text-[11px] text-ck-muted uppercase font-semibold">Status</th>
                   <th class="px-4 py-3 text-left text-[11px] text-ck-muted uppercase font-semibold">Itens</th>
                   <th class="px-4 py-3 text-right text-[11px] text-ck-muted uppercase font-semibold">Total</th>
+                  <th *ngIf="authService.isVendedor()" class="px-4 py-3 text-right text-[11px] text-ck-muted uppercase font-semibold">Comissão</th>
                   <th class="px-4 py-3 text-right text-[11px] text-ck-muted uppercase font-semibold">Ações</th>
                 </tr>
               </thead>
@@ -142,6 +159,7 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
                   </td>
                   <td class="px-4 py-3 text-xs text-ck-muted">{{ v.itens?.length || 0 }} item(ns)</td>
                   <td class="px-4 py-3 text-right font-bold text-ck-price text-sm">R$ {{ v.valorTotal | number:'1.2-2':'pt-BR' }}</td>
+                  <td *ngIf="authService.isVendedor()" class="px-4 py-3 text-right font-bold text-green-400 text-sm">R$ {{ (v.comissao || 0) | number:'1.2-2':'pt-BR' }}</td>
                   <td class="px-4 py-3 text-right">
                     <button *ngIf="v.status !== 'CANCELADA'" (click)="cancelarVenda(v)"
                       class="text-[11px] text-red-400 hover:text-red-300 font-semibold border border-red-900 hover:border-red-500 px-2 py-1 rounded transition-colors">
@@ -305,11 +323,17 @@ export class AdminComponent implements OnInit {
   fornecedores: any[] = [];
   estoquesCriticos: any[] = [];
   totalProdutos = 0;
+  totalVendasValor = 0;
+  totalVendasCount = 0;
   loadingVendas = true;
   showFornecedorForm = false;
   reporProdutoId = '';
   reporQtd = 1;
   novoFornecedor = { nome: '', cnpj: '', email: '', telefone: '', endereco: '' };
+
+  get totalComissao(): number {
+    return this.vendas.reduce((acc, v) => acc + (v.comissao || 0), 0);
+  }
 
   navItems = [
     { tab: 'dashboard' as Tab, label: 'Dashboard', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>' },
@@ -367,6 +391,18 @@ export class AdminComponent implements OnInit {
 
   private carregarVendas() {
     this.loadingVendas = true;
+    // VENDEDOR só vê as vendas onde foi referenciado
+    if (this.authService.isVendedor()) {
+      const userId = this.authService.user()?.id;
+      if (userId) {
+        this.api.getVendasPorVendedor(userId).subscribe({
+          next: (v: any[]) => { this.vendas = v || []; this.loadingVendas = false; this.cdr.detectChanges(); },
+          error: () => { this.loadingVendas = false; this.cdr.detectChanges(); }
+        });
+        return;
+      }
+    }
+    // ADMIN vê todas
     this.api.getVendas().subscribe({
       next: (v: any) => { this.vendas = Array.isArray(v) ? v : []; this.loadingVendas = false; this.cdr.detectChanges(); },
       error: () => { this.loadingVendas = false; this.cdr.detectChanges(); }
@@ -389,7 +425,14 @@ export class AdminComponent implements OnInit {
 
   private carregarDashboard() {
     this.api.getVendas().subscribe({
-      next: (v: any) => { this.vendas = Array.isArray(v) ? v : []; this.cdr.detectChanges(); },
+      next: (v: any) => {
+        const lista = Array.isArray(v) ? v : [];
+        this.vendas = lista;
+        this.totalVendasValor = lista
+          .filter((v: any) => v.status === 'CONCLUIDA')
+          .reduce((acc: number, v: any) => acc + (v.valorTotal || 0), 0);
+        this.cdr.detectChanges();
+      },
       error: () => {}
     });
     this.api.getFornecedores().subscribe({

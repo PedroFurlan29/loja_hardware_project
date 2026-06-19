@@ -5,8 +5,10 @@ import com.lojahardware.unicep.vendas.dto.VendaMapper;
 import com.lojahardware.unicep.vendas.model.Venda;
 import com.lojahardware.unicep.vendas.service.VendaService;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import lombok.Data;
+import java.math.BigDecimal;
 import java.util.*;
 
 @RestController
@@ -18,6 +20,17 @@ public class VendaController {
     @GetMapping
     public ResponseEntity<List<VendaDTO>> listar(){
         return ResponseEntity.ok(VendaMapper.toDTOList(service.listar()));
+    }
+
+    @GetMapping("/minhas")
+    public ResponseEntity<List<VendaDTO>> minhasVendas(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok(VendaMapper.toDTOList(service.listarPorUsuario(email)));
+    }
+
+    @GetMapping("/vendedor/{id}")
+    public ResponseEntity<List<VendaDTO>> porVendedor(@PathVariable Long id){
+        return ResponseEntity.ok(VendaMapper.toDTOList(service.listarPorVendedor(id)));
     }
 
     @GetMapping("/{id}")
@@ -36,9 +49,24 @@ public class VendaController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/totais")
+    public ResponseEntity<Map<String, Object>> totais() {
+        List<Venda> todas = service.listar();
+        long totalVendas = todas.stream().filter(v -> v.getStatus().name().equals("CONCLUIDA")).count();
+        BigDecimal valorTotal = todas.stream()
+            .filter(v -> v.getStatus().name().equals("CONCLUIDA"))
+            .map(Venda::getValorTotal)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        Map<String, Object> res = new HashMap<>();
+        res.put("totalVendas", totalVendas);
+        res.put("valorTotal", valorTotal);
+        return ResponseEntity.ok(res);
+    }
+
     @Data
     public static class VendaRequest {
         private List<ItemRequest> itens;
+        private Long vendedorId;
     }
 
     @Data

@@ -6,6 +6,7 @@ import { CarrinhoComponent } from './features/carrinho/carrinho.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { LoginComponent } from './features/auth/login.component';
 import { AdminComponent } from './features/admin/admin.component';
+import { MeusPedidosComponent } from './features/meus-pedidos/meus-pedidos.component';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { vendedorGuard } from './core/guards/vendedor.guard';
@@ -20,6 +21,6 @@ export const routes: Routes = [
   { path: 'admin/vendas', component: AdminComponent, canActivate: [vendedorGuard] },
   { path: 'admin/estoque', component: AdminComponent, canActivate: [adminGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'meus-pedidos', redirectTo: '/admin/vendas' },
+  { path: 'meus-pedidos', component: MeusPedidosComponent },
   { path: '**', redirectTo: '' }
 ];

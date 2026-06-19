@@ -139,6 +139,7 @@ public class DataLoader implements CommandLineRunner {
     private void salvar(Produto produto) {
         if (produtoRepo.findBySku(produto.getSku()).isPresent()) { log.info("SKU={} já existe.", produto.getSku()); return; }
         try {
+            produto.setImagemUrl(null); // Usa SVGs do frontend em vez de URLs externas
             Produto saved = produtoRepo.save(produto);
             try { estoqueService.criar(saved.getId(), produto.getQuantidade(), produto.getEstoque_minimo()); }
             catch (Exception e) { log.warn("Estoque SKU={} já existe: {}", produto.getSku(), e.getMessage()); }

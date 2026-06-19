@@ -124,8 +124,8 @@ import { map } from 'rxjs';
           <!-- Admin links - só ADMIN e VENDEDOR veem -->
           <ng-container *ngIf="authService.isLoggedIn()">
             <div class="w-px h-4 bg-ck-border mx-2"></div>
-            <a *ngIf="authService.isAdmin()" routerLink="/admin" class="px-3 h-full flex items-center text-ck-accent hover:bg-ck-surface transition-colors">Admin</a>
-            <a *ngIf="authService.isVendedor()" routerLink="/admin/vendas" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Vendas</a>
+            <a *ngIf="authService.isAdmin()" routerLink="/admin" class="px-3 h-full flex items-center text-ck-accent hover:bg-ck-surface transition-colors">Dashboard</a>
+            <a *ngIf="authService.isAdmin() || authService.isVendedor()" routerLink="/admin/vendas" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Vendas</a>
             <a *ngIf="authService.isAdmin()" routerLink="/admin" [queryParams]="{tab:'estoque'}" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Estoque</a>
           </ng-container>
         </div>
