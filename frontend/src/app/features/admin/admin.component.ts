@@ -397,8 +397,8 @@ export class AdminComponent implements OnInit {
 
   private carregarVendas() {
     this.loadingVendas = true;
-    // VENDEDOR só vê as vendas onde foi referenciado
-    if (this.authService.isVendedor()) {
+    // VENDEDOR (não ADMIN) só vê as vendas onde foi referenciado
+    if (this.isVendedorOnly) {
       const userId = this.authService.user()?.id;
       if (userId) {
         this.api.getVendasPorVendedor(userId).subscribe({
