@@ -19,7 +19,20 @@ import { map } from 'rxjs';
 
           <!-- Logo -->
           <a routerLink="/" class="flex items-center gap-2 flex-shrink-0 hover:opacity-90 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/><path d="m14 14 3-3-3-3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="28" height="28">
+              <defs>
+                <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect x="125" y="100" width="250" height="250" rx="30" fill="none" stroke="url(#navGrad)" stroke-width="20"/>
+              <rect x="175" y="150" width="150" height="150" rx="15" fill="url(#navGrad)"/>
+              <path d="M 175 100 V 60 M 212.5 100 V 60 M 250 100 V 60 M 287.5 100 V 60 M 325 100 V 60" stroke="#64748b" stroke-width="12" stroke-linecap="round"/>
+              <path d="M 175 350 V 390 M 212.5 350 V 390 M 250 350 V 390 M 287.5 350 V 390 M 325 350 V 390" stroke="#64748b" stroke-width="12" stroke-linecap="round"/>
+              <path d="M 125 150 H 85 M 125 187.5 H 85 M 125 225 H 85 M 125 262.5 H 85 M 125 300 H 85" stroke="#64748b" stroke-width="12" stroke-linecap="round"/>
+              <path d="M 375 150 H 415 M 375 187.5 H 415 M 375 225 H 415 M 375 262.5 H 415 M 375 300 H 415" stroke="#64748b" stroke-width="12" stroke-linecap="round"/>
+            </svg>
             <span class="text-white font-bold text-lg tracking-tight">Hardware<span class="text-ck-accent">Store</span></span>
           </a>
 
@@ -112,7 +125,7 @@ import { map } from 'rxjs';
           <ng-container *ngIf="authService.isLoggedIn()">
             <div class="w-px h-4 bg-ck-border mx-2"></div>
             <a *ngIf="authService.isAdmin()" routerLink="/admin" class="px-3 h-full flex items-center text-ck-accent hover:bg-ck-surface transition-colors">Admin</a>
-            <a *ngIf="authService.isVendedor()" routerLink="/admin" [state]="{tab:'vendas'}" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Vendas</a>
+            <a *ngIf="authService.isVendedor()" routerLink="/admin/vendas" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Vendas</a>
             <a *ngIf="authService.isAdmin()" routerLink="/admin" [queryParams]="{tab:'estoque'}" class="px-3 h-full flex items-center hover:text-white hover:bg-ck-surface transition-colors">Estoque</a>
           </ng-container>
         </div>

@@ -2,68 +2,69 @@ export function getCategoryFallbackSvg(categoria?: string): string {
   const cat = (categoria || '').toLowerCase();
 
   if (cat.includes('cpu') || cat.includes('processador')) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-      <rect x="30" y="30" width="140" height="140" rx="8" fill="#1a1a2e" stroke="#2563eb" stroke-width="2"/>
-      <rect x="50" y="50" width="100" height="100" rx="4" fill="#16213e" stroke="#2563eb" stroke-width="1.5"/>
-      <rect x="65" y="65" width="70" height="70" rx="3" fill="#0f3460" stroke="#2563eb" stroke-width="1"/>
-      <rect x="75" y="75" width="50" height="50" rx="2" fill="#1a1a2e"/>
-      <text x="100" y="105" text-anchor="middle" fill="#2563eb" font-size="10" font-weight="bold" font-family="monospace">CPU</text>
-      <line x1="30" y1="50" x2="15" y2="50" stroke="#2563eb" stroke-width="2"/><line x1="30" y1="80" x2="15" y2="80" stroke="#2563eb" stroke-width="2"/>
-      <line x1="30" y1="110" x2="15" y2="110" stroke="#2563eb" stroke-width="2"/><line x1="30" y1="140" x2="15" y2="140" stroke="#2563eb" stroke-width="2"/>
-      <line x1="170" y1="50" x2="185" y2="50" stroke="#2563eb" stroke-width="2"/><line x1="170" y1="80" x2="185" y2="80" stroke="#2563eb" stroke-width="2"/>
-      <line x1="170" y1="110" x2="185" y2="110" stroke="#2563eb" stroke-width="2"/><line x1="170" y1="140" x2="185" y2="140" stroke="#2563eb" stroke-width="2"/>
-      <line x1="50" y1="30" x2="50" y2="15" stroke="#2563eb" stroke-width="2"/><line x1="80" y1="30" x2="80" y2="15" stroke="#2563eb" stroke-width="2"/>
-      <line x1="110" y1="30" x2="110" y2="15" stroke="#2563eb" stroke-width="2"/><line x1="140" y1="30" x2="140" y2="15" stroke="#2563eb" stroke-width="2"/>
-      <line x1="50" y1="170" x2="50" y2="185" stroke="#2563eb" stroke-width="2"/><line x1="80" y1="170" x2="80" y2="185" stroke="#2563eb" stroke-width="2"/>
-      <line x1="110" y1="170" x2="110" y2="185" stroke="#2563eb" stroke-width="2"/><line x1="140" y1="170" x2="140" y2="185" stroke="#2563eb" stroke-width="2"/>
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <g>
+        <rect x="21.336" y="31.996" fill="#A0D468" width="469.32" height="448"/>
+        <path fill="#434A54" d="M21.336,426.652V479.996h29.773l31.102-7.531L28.875,419.121L21.336,426.652z"/>
+        <path fill="#8CC153" d="M10.664,21.332v469.32h490.68V21.332H10.664z M480,469.34H32V42.66h448V469.34z"/>
+        <path fill="#CCD1D9" d="M448,170.66V85.332c0-11.781-9.562-21.336-21.344-21.336H85.359c-11.789,0-21.336,9.555-21.336,21.336v85.328l-10.688,21.336v128l10.688,21.344v85.312c0,11.781,9.547,21.344,21.336,21.344h96l21.328-10.656H320l21.344,10.656h85.312c11.781,0,21.344-9.562,21.344-21.344V341.34l10.688-21.344v-128L448,170.66z"/>
+        <rect x="106.664" y="106.66" fill="#E6E9ED" width="298.68" height="298.68"/>
+        <path fill="#434A54" d="M187.383,285.715c-10.945,0-17.891-8.938-17.891-22.938c0-11.336,5.039-23.039,18.086-23.039c7.992,0,13.516,4.375,15.039,11.805h14.562c-1.141-14-13.039-24.281-29.32-24.281c-20.75,0-33.32,15.711-33.32,35.414c0,21.414,13.047,35.602,32.75,35.602c18.562,0,28.844-11.219,30.367-27.789h-14.75C201.664,280.387,196.336,285.715,187.383,285.715z"/>
+        <path fill="#434A54" d="M261.961,228.887h-29.227v67.781h14.758v-24.375h15.234c13.617,0,24.086-6.852,24.086-21.609C286.812,235.738,276.625,228.887,261.961,228.887z M260.727,260.582h-13.234v-19.516h13.328c6.57,0,11.523,2.57,11.523,9.805C272.344,258.395,267.391,260.582,260.727,260.582z"/>
+        <path fill="#434A54" d="M342.719,228.887v40.555c0,9.992-2.375,16.273-13.812,16.273c-11.609,0-14.562-5.906-14.562-16.273v-40.555H299.5v40.555c0,19.32,9.031,28.555,29.219,28.555c19.812,0,28.844-9.031,28.844-28.367v-40.742H342.719z"/>
+      </g>
     </svg>`;
   }
 
   if (cat.includes('gpu') || cat.includes('video') || cat.includes('gráfica') || cat.includes('placa')) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-      <rect x="15" y="55" width="170" height="90" rx="6" fill="#1a1a2e" stroke="#e8650a" stroke-width="2"/>
-      <rect x="55" y="35" width="90" height="20" rx="3" fill="#1a1a2e" stroke="#e8650a" stroke-width="1.5"/>
-      <rect x="70" y="68" width="60" height="35" rx="4" fill="#16213e" stroke="#e8650a" stroke-width="1"/>
-      <rect x="75" y="73" width="50" height="25" rx="2" fill="#0f3460"/>
-      <text x="100" y="90" text-anchor="middle" fill="#e8650a" font-size="8" font-weight="bold" font-family="monospace">GPU</text>
-      <circle cx="40" cy="100" r="5" fill="#e8650a" opacity="0.6"/><circle cx="55" cy="100" r="5" fill="#e8650a" opacity="0.6"/>
-      <circle cx="145" cy="100" r="5" fill="#e8650a" opacity="0.6"/><circle cx="160" cy="100" r="5" fill="#e8650a" opacity="0.6"/>
-      <rect x="30" y="118" width="30" height="12" rx="2" fill="#16213e" stroke="#e8650a" stroke-width="1"/>
-      <rect x="140" y="118" width="30" height="12" rx="2" fill="#16213e" stroke="#e8650a" stroke-width="1"/>
-      <rect x="88" y="130" width="24" height="15" rx="2" fill="#0f3460" stroke="#e8650a" stroke-width="1"/>
+    return `<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <path d="M963.718737 567.969684c0-31.636211-19.240421-68.419368-42.954105-82.108631L181.490526 59.041684c-23.713684-13.689263-42.954105 0.862316-42.954105 32.498527v362.819368c0 31.636211 19.240421 68.419368 42.954105 82.108632l739.274106 426.819368c23.713684 13.689263 42.954105-0.889263 42.954105-32.498526V567.969684z" fill="#39549F"/>
+      <path d="M66.236632 105.094737l88.495157-49.017263 21.234527 39.801263-37.429895 50.58021L66.236632 105.094737zM865.253053 1013.786947l85.315368-49.259789-77.392842-49.744842-7.922526 99.004631z" fill="#39549F"/>
+      <path d="M880.801684 615.828211c0-31.609263-19.267368-68.392421-42.981052-82.081685L98.573474 106.927158C74.859789 93.237895 55.592421 107.789474 55.592421 139.398737v362.846316c0 31.609263 19.267368 68.392421 42.981053 82.081684l739.247158 426.819368c23.713684 13.689263 42.981053-0.862316 42.981052-32.471579V615.828211z" fill="#18171C"/>
+      <path d="M704.727579 535.498105c69.443368 40.097684 125.817263 137.781895 125.817263 217.977263s-56.373895 112.747789-125.817263 72.650106c-69.470316-40.097684-125.844211-137.781895-125.844211-217.977263 0-80.168421 56.373895-112.747789 125.844211-72.650106z" fill="#3B57A6"/>
+      <path d="M693.948632 541.722947c69.443368 40.097684 125.844211 137.754947 125.84421 217.950316 0 80.195368-56.400842 112.747789-125.84421 72.650105s-125.844211-137.754947-125.844211-217.950315c0-80.195368 56.400842-112.747789 125.844211-72.650106z" fill="#4762AF"/>
+      <path d="M693.948632 645.712842c19.752421 11.398737 35.786105 39.181474 35.786105 61.978947 0 22.797474-16.033684 32.040421-35.786105 20.641685-19.752421-11.398737-35.786105-39.154526-35.786106-61.952 0-22.824421 16.033684-32.067368 35.786106-20.668632z" fill="#6D8ACA"/>
     </svg>`;
   }
 
   if (cat.includes('ram') || cat.includes('memoria') || cat.includes('memória')) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-      <rect x="25" y="20" width="150" height="160" rx="6" fill="#1a1a2e" stroke="#0f6e56" stroke-width="2"/>
-      <rect x="35" y="30" width="130" height="20" rx="3" fill="#16213e" stroke="#0f6e56" stroke-width="1"/>
-      <rect x="35" y="60" width="130" height="20" rx="3" fill="#16213e" stroke="#0f6e56" stroke-width="1"/>
-      <rect x="35" y="90" width="130" height="20" rx="3" fill="#16213e" stroke="#0f6e56" stroke-width="1"/>
-      <rect x="35" y="120" width="130" height="20" rx="3" fill="#16213e" stroke="#0f6e56" stroke-width="1"/>
-      <rect x="38" y="33" width="40" height="14" rx="2" fill="#0f3460"/>
-      <rect x="38" y="63" width="40" height="14" rx="2" fill="#0f3460"/>
-      <rect x="38" y="93" width="40" height="14" rx="2" fill="#0f3460"/>
-      <rect x="38" y="123" width="40" height="14" rx="2" fill="#0f3460"/>
-      <text x="100" y="175" text-anchor="middle" fill="#0f6e56" font-size="10" font-weight="bold" font-family="monospace">RAM</text>
-      <rect x="88" y="33" width="30" height="14" rx="2" fill="#0f6e56" opacity="0.4"/>
-      <rect x="88" y="63" width="30" height="14" rx="2" fill="#0f6e56" opacity="0.4"/>
-      <rect x="88" y="93" width="30" height="14" rx="2" fill="#0f6e56" opacity="0.4"/>
-      <rect x="88" y="123" width="30" height="14" rx="2" fill="#0f6e56" opacity="0.4"/>
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <g>
+        <path fill="#A0D468" d="M278.625,361.594L256,338.969l0,0c-4.172-4.156-4.172-10.922,0-15.094c4.156-4.156,10.922-4.156,15.078,0l0,0l22.625,22.641L512,128.227L459.203,75.43c-4.172,4.164-10.922,4.164-15.094,0c-4.156-4.164-4.156-10.922,0-15.086l-7.531-7.539c-4.172,4.164-10.922,4.164-15.094-0.008c-4.156-4.164-4.156-10.914,0-15.078L383.781,0L0,383.781L37.703,421.5c4.172-4.172,10.922-4.172,15.094,0c4.156,4.156,4.156,10.906,0,15.078l7.531,7.547c4.172-4.172,10.922-4.172,15.094,0c4.156,4.156,4.172,10.906,0,15.078L128.219,512L278.625,361.594z"/>
+        <polygon fill="#8CC153" points="256,338.969 105.594,489.375 128.219,512 278.625,361.594 256,338.969"/>
+        <polygon fill="#8CC153" points="271.078,323.875 271.078,323.875 271.078,323.875 293.703,346.516 512,128.227 489.375,105.602"/>
+        <rect x="84.259" y="362.447" transform="matrix(0.7071 0.7071 -0.7071 0.7071 302.302 37.7409)" fill="#656D78" width="42.669" height="42.669"/>
+        <polygon fill="#656D78" points="165.938,353.609 135.766,323.438 165.938,293.281 196.094,323.438"/>
+        <polygon fill="#656D78" points="256.438,263.102 226.266,232.93 256.438,202.766 286.609,232.93"/>
+        <rect x="295.447" y="151.259" transform="matrix(0.7071 0.7071 -0.7071 0.7071 214.8253 -173.4466)" fill="#656D78" width="42.669" height="42.669"/>
+      </g>
     </svg>`;
   }
 
   if (cat.includes('ssd') || cat.includes('armazenamento') || cat.includes('nvme') || cat.includes('hdd') || cat.includes('disco')) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-      <rect x="20" y="50" width="160" height="100" rx="8" fill="#1a1a2e" stroke="#185fa5" stroke-width="2"/>
-      <rect x="35" y="65" width="130" height="70" rx="4" fill="#16213e" stroke="#185fa5" stroke-width="1"/>
-      <text x="100" y="108" text-anchor="middle" fill="#185fa5" font-size="14" font-weight="bold" font-family="monospace">SSD</text>
-      <circle cx="55" cy="80" r="3" fill="#185fa5" opacity="0.5"/><circle cx="55" cy="90" r="3" fill="#185fa5" opacity="0.5"/>
-      <circle cx="55" cy="100" r="3" fill="#185fa5" opacity="0.5"/><circle cx="55" cy="110" r="3" fill="#185fa5" opacity="0.5"/>
-      <rect x="135" y="75" width="20" height="30" rx="2" fill="#0f3460" stroke="#185fa5" stroke-width="1"/>
-      <rect x="30" y="155" width="40" height="6" rx="2" fill="#16213e" stroke="#185fa5" stroke-width="0.5"/>
-      <rect x="80" y="155" width="60" height="6" rx="2" fill="#16213e" stroke="#185fa5" stroke-width="0.5"/>
-      <rect x="148" y="155" width="25" height="6" rx="2" fill="#16213e" stroke="#185fa5" stroke-width="0.5"/>
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 58">
+      <path fill="#AFB6BB" d="M55.911,50H2.089C0.935,50,0,49.065,0,47.911V10.089C0,8.935,0.935,8,2.089,8h53.822 C57.065,8,58,8.935,58,10.089v37.822C58,49.065,57.065,50,55.911,50z"/>
+      <circle fill="#E7ECED" cx="4" cy="46" r="1"/>
+      <circle fill="#E7ECED" cx="54" cy="12" r="1"/>
+      <circle fill="#E7ECED" cx="54" cy="46" r="1"/>
+      <ellipse transform="matrix(0.9155 -0.4022 0.4022 0.9155 -11.8809 17.8393)" fill="#48A0DC" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" cx="36.54" cy="37.212" rx="7.449" ry="4.74"/>
+      <path fill="#E7ECED" d="M8,32H0V10.089C0,8.935,0.935,8,2.089,8H32v0C32,21.255,21.255,32,8,32z"/>
+      <polygon fill="#283238" points="58,42 54,42 52,39 52,18 58,18"/>
+      <rect x="54" y="20" fill="#D3AA6E" width="4" height="2"/>
+      <rect x="54" y="23" fill="#D3AA6E" width="4" height="2"/>
+      <rect x="54" y="26" fill="#D3AA6E" width="4" height="2"/>
+      <rect x="54" y="29" fill="#D3AA6E" width="4" height="2"/>
+      <rect x="55" y="38" fill="#D3AA6E" width="3" height="2"/>
+      <rect x="54" y="35" fill="#D3AA6E" width="4" height="2"/>
+      <rect x="3" y="25" fill="#6C797A" width="2" height="2"/>
+      <rect x="3" y="22" fill="#6C797A" width="2" height="2"/>
+      <rect x="3" y="19" fill="#6C797A" width="2" height="2"/>
+      <rect x="3" y="16" fill="#6C797A" width="2" height="2"/>
+      <rect x="3" y="13" fill="#6C797A" width="2" height="2"/>
+      <rect x="9" y="13" fill="#6C797A" width="13" height="2"/>
+      <rect x="9" y="16" fill="#6C797A" width="10" height="2"/>
+      <rect x="9" y="19" fill="#6C797A" width="11" height="2"/>
+      <rect x="9" y="22" fill="#6C797A" width="4" height="2"/>
     </svg>`;
   }
 

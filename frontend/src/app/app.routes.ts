@@ -20,5 +20,6 @@ export const routes: Routes = [
   { path: 'admin/vendas', component: AdminComponent, canActivate: [vendedorGuard] },
   { path: 'admin/estoque', component: AdminComponent, canActivate: [adminGuard] },
   { path: 'login', component: LoginComponent },
+  { path: 'meus-pedidos', redirectTo: '/admin/vendas' },
   { path: '**', redirectTo: '' }
 ];

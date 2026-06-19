@@ -84,9 +84,10 @@ import { getCategoryFallbackSvg } from '../../shared/utils/category-images';
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
                 Adicionar ao Carrinho
               </button>
-              <a routerLink="/carrinho" class="w-full py-3 bg-green-700 hover:bg-green-600 text-white font-bold rounded uppercase tracking-wide text-sm transition-colors text-center">
+              <button (click)="addToCartAndGo()"
+                class="w-full py-3 bg-green-700 hover:bg-green-600 text-white font-bold rounded uppercase tracking-wide text-sm transition-colors text-center">
                 Comprar Agora
-              </a>
+              </button>
             </div>
 
             <!-- Technical specs -->
@@ -149,6 +150,11 @@ export class ProdutoDetalheComponent implements OnInit {
       quantidade: 1,
     });
     this.toast.success('Produto adicionado ao carrinho!');
+  }
+
+  addToCartAndGo() {
+    this.addToCart();
+    this.router.navigate(['/carrinho']);
   }
 
   getSpecs(): { label: string; value: string }[] {

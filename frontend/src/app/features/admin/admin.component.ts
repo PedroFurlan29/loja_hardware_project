@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../shared/services/toast.service';
@@ -15,8 +15,8 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
   template: `
     <div class="bg-ck-bg min-h-screen flex">
 
-      <!-- Sidebar -->
-      <aside class="w-56 bg-[#0a0a0a] border-r border-ck-border flex-shrink-0 sticky top-0 h-screen overflow-y-auto hidden md:block">
+      <!-- Sidebar - só ADMIN vê -->
+      <aside *ngIf="authService.isAdmin()" class="w-56 bg-[#0a0a0a] border-r border-ck-border flex-shrink-0 sticky top-0 h-screen overflow-y-auto hidden md:block">
         <div class="p-4 border-b border-ck-border">
           <p class="text-[11px] text-ck-muted uppercase font-semibold">Painel</p>
           <p class="text-sm font-bold text-white mt-0.5">{{ authService.user()?.nome }}</p>
@@ -25,7 +25,7 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
           </span>
         </div>
         <nav class="p-2">
-          <button *ngFor="let item of navItems" (click)="activeTab = item.tab"
+          <button *ngFor="let item of navItems" (click)="switchTab(item.tab)"
             class="w-full flex items-center gap-3 px-3 py-2.5 rounded text-sm transition-colors mb-0.5 text-left"
             [class]="activeTab === item.tab ? 'bg-ck-accent text-white font-semibold' : 'text-ck-muted hover:text-white hover:bg-ck-surface'">
             <span [innerHTML]="item.icon"></span>
@@ -39,12 +39,29 @@ type Tab = 'dashboard' | 'vendas' | 'estoque' | 'fornecedores';
         </nav>
       </aside>
 
-      <!-- Main content -->
-      <main class="flex-1 min-w-0 p-6">
+      <!-- Header info para VENDEDOR (sem sidebar) -->
+      <div *ngIf="authService.isVendedor()" class="fixed top-0 left-0 right-0 z-40 bg-[#0a0a0a] border-b border-ck-border h-14 flex items-center px-6">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-ck-accent flex items-center justify-center text-white text-xs font-bold">
+            {{ authService.user()?.nome?.charAt(0)?.toUpperCase() }}
+          </div>
+          <div>
+            <p class="text-xs font-bold text-white">{{ authService.user()?.nome }}</p>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-ck-accent/20 text-ck-accent font-bold uppercase">{{ authService.user()?.perfil }}</span>
+          </div>
+        </div>
+        <a routerLink="/" class="ml-auto text-xs text-ck-muted hover:text-white flex items-center gap-1 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Ver Loja
+        </a>
+      </div>
 
-        <!-- Mobile tab bar -->
-        <div class="flex gap-2 mb-6 md:hidden overflow-x-auto pb-2">
-          <button *ngFor="let item of navItems" (click)="activeTab = item.tab"
+      <!-- Main content -->
+      <main class="flex-1 min-w-0" [class.pt-16]="authService.isVendedor()" [class.p-6]="true">
+
+        <!-- Mobile tab bar - só ADMIN -->
+        <div *ngIf="authService.isAdmin()" class="flex gap-2 mb-6 md:hidden overflow-x-auto pb-2">
+          <button *ngFor="let item of navItems" (click)="switchTab(item.tab)"
             class="flex-shrink-0 px-3 py-1.5 rounded text-xs font-semibold transition-colors"
             [class]="activeTab === item.tab ? 'bg-ck-accent text-white' : 'bg-ck-surface text-ck-muted border border-ck-border'">
             {{ item.label }}
@@ -306,23 +323,87 @@ export class AdminComponent implements OnInit {
     private api: ApiService,
     private toast: ToastService,
     private route: ActivatedRoute,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
+    // Se for VENDEDOR, força tab de vendas e não mostra mais nada
+    if (this.authService.isVendedor()) {
+      this.activeTab = 'vendas';
+      this.carregarVendas();
+      return;
+    }
+
+    // ADMIN: define tab pela URL
+    const urlPath = this.router.url.split('?')[0];
+    if (urlPath.includes('/admin/vendas')) {
+      this.activeTab = 'vendas';
+    } else if (urlPath.includes('/admin/estoque')) {
+      this.activeTab = 'estoque';
+    }
     this.route.queryParams.subscribe(params => {
       if (params['tab'] && ['dashboard','vendas','estoque','fornecedores'].includes(params['tab'])) {
         this.activeTab = params['tab'] as Tab;
       }
     });
-    this.loadAll();
+    this.carregarDadosAtuais();
   }
 
-  loadAll() {
-    this.api.getVendas().subscribe({ next: (v: any) => { this.vendas = Array.isArray(v) ? v : []; this.loadingVendas = false; }, error: () => this.loadingVendas = false });
-    this.api.getFornecedores().subscribe({ next: (f: any[]) => this.fornecedores = f, error: () => {} });
-    this.api.getEstoquesCriticos().subscribe({ next: (e: any[]) => this.estoquesCriticos = e, error: () => {} });
-    this.api.getProdutos(0, 100).subscribe({ next: (p: any) => this.totalProdutos = p.page?.totalElements ?? p.totalElements ?? p.content?.length ?? 0, error: () => {} });
+  switchTab(tab: Tab) {
+    this.activeTab = tab;
+    this.carregarDadosAtuais();
+    this.cdr.detectChanges();
+  }
+
+  private carregarDadosAtuais() {
+    switch (this.activeTab) {
+      case 'vendas': this.carregarVendas(); break;
+      case 'estoque': this.carregarEstoque(); break;
+      case 'fornecedores': this.carregarFornecedores(); break;
+      case 'dashboard': this.carregarDashboard(); break;
+    }
+  }
+
+  private carregarVendas() {
+    this.loadingVendas = true;
+    this.api.getVendas().subscribe({
+      next: (v: any) => { this.vendas = Array.isArray(v) ? v : []; this.loadingVendas = false; this.cdr.detectChanges(); },
+      error: () => { this.loadingVendas = false; this.cdr.detectChanges(); }
+    });
+  }
+
+  private carregarEstoque() {
+    this.api.getEstoquesCriticos().subscribe({
+      next: (e: any[]) => { this.estoquesCriticos = e; this.cdr.detectChanges(); },
+      error: () => {}
+    });
+  }
+
+  private carregarFornecedores() {
+    this.api.getFornecedores().subscribe({
+      next: (f: any[]) => { this.fornecedores = f; this.cdr.detectChanges(); },
+      error: () => {}
+    });
+  }
+
+  private carregarDashboard() {
+    this.api.getVendas().subscribe({
+      next: (v: any) => { this.vendas = Array.isArray(v) ? v : []; this.cdr.detectChanges(); },
+      error: () => {}
+    });
+    this.api.getFornecedores().subscribe({
+      next: (f: any[]) => { this.fornecedores = f; this.cdr.detectChanges(); },
+      error: () => {}
+    });
+    this.api.getEstoquesCriticos().subscribe({
+      next: (e: any[]) => { this.estoquesCriticos = e; this.cdr.detectChanges(); },
+      error: () => {}
+    });
+    this.api.getProdutos(0, 100).subscribe({
+      next: (p: any) => { this.totalProdutos = p.page?.totalElements ?? p.totalElements ?? p.content?.length ?? 0; this.cdr.detectChanges(); },
+      error: () => {}
+    });
   }
 
   cancelarVenda(v: any) {
