@@ -66,6 +66,13 @@ import { ToastService } from '../../shared/services/toast.service';
               </button>
             </div>
           </div>
+
+          <div class="mt-4 text-center">
+            <p class="text-xs text-ck-muted">
+              Não tem conta?
+              <a routerLink="/registrar" class="text-ck-accent hover:text-white font-semibold transition-colors">Criar Conta</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

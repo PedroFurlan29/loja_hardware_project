@@ -53,5 +53,22 @@ public class AuthController {
             .collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
+
+    @PostMapping("/registrar")
+    public ResponseEntity<?> registrar(@RequestBody RegisterRequest req) {
+        try {
+            Usuario u = new Usuario();
+            u.setNome(req.getNome());
+            u.setEmail(req.getEmail());
+            u.setSenha(req.getSenha());
+            u.setPerfil(PerfilUsuario.CLIENTE);
+            usuarioService.criar(u);
+            return ResponseEntity.status(201).body(Map.of("message","Conta criada com sucesso!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     @Data public static class LoginRequest { private String email; private String senha; }
+    @Data public static class RegisterRequest { private String nome; private String email; private String senha; }
 }

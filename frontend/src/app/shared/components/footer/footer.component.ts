@@ -45,6 +45,7 @@ import { RouterLink } from '@angular/router';
           <h3 class="text-white font-bold uppercase text-xs tracking-widest mb-4">Conta</h3>
           <ul class="space-y-2 text-sm">
             <li><a routerLink="/login" class="hover:text-white transition-colors">Entrar</a></li>
+            <li><a routerLink="/registrar" class="hover:text-white transition-colors">Criar Conta</a></li>
             <li><a routerLink="/admin/vendas" class="hover:text-white transition-colors">Área do Vendedor</a></li>
           </ul>
         </div>

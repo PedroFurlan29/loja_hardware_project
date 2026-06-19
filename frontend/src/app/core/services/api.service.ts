@@ -13,6 +13,10 @@ export class ApiService {
     return this.http.post<{ token: string; type: string }>(`${API_URL}/auth/login`, { email, senha });
   }
 
+  registrar(nome: string, email: string, senha: string): Observable<any> {
+    return this.http.post(`${API_URL}/auth/registrar`, { nome, email, senha });
+  }
+
   getMe(): Observable<any> {
     return this.http.get(`${API_URL}/auth/me`);
   }
