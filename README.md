@@ -15,6 +15,7 @@ Spring Boot 3.3 + H2/PostgreSQL + JWT + Maven.
 - CRUD de produtos (CPU, GPU, Memoria, Armazenamento)
 - Controle de estoque com nivel minimo critico
 - Registro e cancelamento de vendas
+- Sistema de indicação de vendedor
 - Seed de dados iniciais
 
 ---
@@ -34,26 +35,15 @@ Spring Boot 3.3 + H2/PostgreSQL + JWT + Maven.
 ```
 git clone <repo>
 cd <repo>
-mvn spring-boot:run
-# API: http://localhost:8080/api
-# H2 Console: http://localhost:8080/api/h2-console
-```
-
-```
-mvn test
+docker-compose up --build
 ```
 
 ---
 
-## Docker
-
-```
-docker-compose up -d
-```
-
 Serviços:
-- Backend: http://localhost:8080/api
+- Backend: http://localhost:8080/api - precisa do auth então é recomendado ir diretamente pelo frontend ou utilizar curl's
 - Frontend: http://localhost:4200
+
 
 ### Build manual
 
